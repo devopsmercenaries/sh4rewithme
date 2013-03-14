@@ -2,7 +2,6 @@ How to build sh4rewithme Maven artifacts
 ========================================
 From this repository's root, launch:
 ######
-    cd sh4rewithme-parent
     mvn clean install
 
 How to build sh4rewithme RPM packages
