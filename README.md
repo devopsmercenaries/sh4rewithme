@@ -1,3 +1,6 @@
+[![Build Status](https://buildhive.cloudbees.com/job/devopsmercenaries/job/sh4rewithme/badge/icon)](https://buildhive.cloudbees.com/job/devopsmercenaries/job/sh4rewithme/)
+
+
 How to build sh4rewithme Maven artifacts
 ========================================
 From this repository's root, launch:
