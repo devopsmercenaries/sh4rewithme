@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sh4re="http://www.sh4rewith.me">
+<head>
+<meta charset="utf-8" />
+<title th:text="#{app.title}">Sh4reWith.me</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="" />
+<meta name="author" content="" />
+<!-- Le styles -->
+<style>
+body {
+	padding-top: 60px;
+	/* 60px to make the container go all the way to the bottom of the topbar */
+}
+
+.main-icon {
+	float: left;
+	height: 200px;
+}
+
+.main-hero {
+	height: 300px;
+}
+
+.main-text {
+	margin: 40px;
+}
+</style>
+<link href="../../css/bootstrap.css" rel="stylesheet" th:href="@{./css/bootstrap.css}" />
+<link href="../../css/sh4rewithme/header.css" rel="stylesheet" th:href="@{./css/sh4rewithme/header.css}" />
+<link href="../../css/sh4rewithme/body.css" rel="stylesheet" th:href="@{./css/sh4rewithme/body.css}" />
+<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+    <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+<!-- Le fav and touch icons -->
+<link rel="shortcut icon" href="../../images/favicon.ico" th:href="@{./images/favicon.ico}" />
+<link rel="apple-touch-icon" href="../../images/apple-touch-icon.png" th:href="@{./images/apple-touch-icon.png}" />
+<link rel="apple-touch-icon" sizes="72x72" href="../../images/apple-touch-icon-72x72.png" th:href="@{./images/apple-touch-icon-72x72.png}" />
+<link rel="apple-touch-icon" sizes="114x114" href="../../images/apple-touch-icon-114x114.png" th:href="@{./images/apple-touch-icon-114x114.png}" />
+</head>
+<body>
+	<div class="navbar navbar-fixed-top">
+		<div class="navbar-inner">
+			<div class="container">
+				<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</a>
+				<img src="../../images/Sh4reWithMe.png" th:src="@{./images/Sh4reWithMe.png}" class="header-icon pull-left" />
+				<a class="brand" href="#" th:href="@{./welcome}" th:text="#{app.title}">Sh4reWith.me</a>
+				<div class="nav-collapse">
+					<ul class="nav">
+						<li><a href="./sharedFiles.html" th:href="@{./shared-files}" th:text="#{sharedFiles.menu.title}">Cavern</a></li>
+						<li><a href="./uploadForm.html" th:href="@{./upload}" th:text="#{upload.menu.title}">Upload</a></li>
+						<li><a href="./userInfo.html" th:href="@{./user-info}" th:text="#{userInfo.menu.title}">User info</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="hero-unit main-hero">
+		<h1 th:text="#{welcome.title}">Welcome to Sh4reWith.me</h1>
+		<p class="main-text">
+			<img src="../../images/Sh4reWithMe.png" th:src="@{./images/Sh4reWithMe.png}" class="main-icon" />
+			<span th:text="#{welcome.text}">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
+				dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure
+				dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+				culpa qui officia deserunt mollit anim id est laborum.</span>
+		</p>
+	</div>
+	<!-- /container -->
+	<!-- Le javascript
+================================================== -->
+	<!-- Placed at the end of the document so the pages load faster -->
+	<script src="../../js/jquery.js" th:src="@{./js/jquery.js}"></script>
+	<script src="../../js/bootstrap-transition.js" th:src="@{./js/bootstrap-transition.js}"></script>
+	<script src="../../js/bootstrap-alert.js" th:src="@{./js/bootstrap-alert.js}"></script>
+	<script src="../../js/bootstrap-modal.js" th:src="@{./js/bootstrap-modal.js}"></script>
+	<script src="../../js/bootstrap-dropdown.js" th:src="@{./js/bootstrap-dropdown.js}"></script>
+	<script src="../../js/bootstrap-scrollspy.js" th:src="@{./js/bootstrap-scrollspy.js}"></script>
+	<script src="../../js/bootstrap-tab.js" th:src="@{./js/bootstrap-tab.js}"></script>
+	<script src="../../js/bootstrap-tooltip.js" th:src="@{./js/bootstrap-tooltip.js}"></script>
+	<script src="../../js/bootstrap-popover.js" th:src="@{./js/bootstrap-popover.js}"></script>
+	<script src="../../js/bootstrap-button.js" th:src="@{./js/bootstrap-button.js}"></script>
+	<script src="../../js/bootstrap-collapse.js" th:src="@{./js/bootstrap-collapse.js}"></script>
+	<script src="../../js/bootstrap-carousel.js" th:src="@{./js/bootstrap-carousel.js}"></script>
+	<script src="../../js/bootstrap-typeahead.js" th:src="@{./js/bootstrap-typeahead.js}"></script>
+</body>
+</html>

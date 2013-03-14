@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sh4re="http://www.sh4rewith.me">
+<head>
+<meta charset="utf-8" />
+<title th:text="#{app.title}">Sh4reWith.me</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="" />
+<meta name="author" content="" />
+<!-- Le styles -->
+<style>
+body {
+	padding-top: 60px;
+	/* 60px to make the container go all the way to the bottom of the topbar */
+}
+
+.centered {
+	text-align: center;
+}
+</style>
+<link href="../../css/bootstrap.css" rel="stylesheet" th:href="@{./css/bootstrap.css}" />
+<link href="../../css/sh4rewithme/header.css" rel="stylesheet" th:href="@{./css/sh4rewithme/header.css}" />
+<link href="../../css/sh4rewithme/body.css" rel="stylesheet" th:href="@{./css/sh4rewithme/body.css}" />
+<link href="../../css/sh4rewithme/dnd-upload.css" rel="stylesheet" th:href="@{./css/sh4rewithme/dnd-upload.css}" />
+<link href="../../css/font-awesome.css" rel="stylesheet" th:href="@{./css/font-awesome.css}" />
+<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+    <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+<!-- Le fav and touch icons -->
+<link rel="shortcut icon" href="../../images/favicon.ico" th:href="@{./images/favicon.ico}" />
+<link rel="apple-touch-icon" href="../../images/apple-touch-icon.png" th:href="@{./images/apple-touch-icon.png}" />
+<link rel="apple-touch-icon" sizes="72x72" href="../../images/apple-touch-icon-72x72.png" th:href="@{./images/apple-touch-icon-72x72.png}" />
+<link rel="apple-touch-icon" sizes="114x114" href="../../images/apple-touch-icon-114x114.png" th:href="@{./images/apple-touch-icon-114x114.png}" />
+</head>
+<body>
+	<div class="navbar navbar-fixed-top">
+		<div class="navbar-inner">
+			<div class="container">
+				<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</a>
+				<img src="../../images/Sh4reWithMe.png" th:src="@{./images/Sh4reWithMe.png}" class="header-icon pull-left" />
+				<a class="brand" href="./welcome.html" th:href="@{./welcome}" th:text="#{app.title}">Sh4reWith.me</a>
+				<div class="nav-collapse">
+					<ul class="nav">
+						<li><a href="./sharedFiles.html" th:href="@{./shared-files}" th:text="#{sharedFiles.menu.title}">Cavern</a></li>
+						<li class="active"><a href="./uploadForm.html" th:text="#{upload.menu.title}">Upload</a></li>
+						<li><a href="./userInfo.html" th:href="@{./user-info}" th:text="#{userInfo.menu.title}">User info</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="hero-unit main-hero">
+		<div class="span6">
+			<h3 th:text="#{upload.form.legend}">Share a file</h3>
+			<form class="form-horizontal" method="post" enctype="multipart/form-data" action="#" th:action="@{./upload}" th:object="${toBeSharedFile}">
+				<fieldset>
+					<div class="control-group">
+						<label class="control-label" for="description" th:text="#{upload.form.label.description}">Description</label>
+						<div class="controls">
+							<div class="input-prepend">
+								<textarea name="description" id="description" class="xxxlarge" th:field="*{description}"></textarea>
+							</div>
+						</div>
+						<label class="control-label" for="file" th:text="#{upload.form.label.file}">File</label>
+						<div class="controls">
+							<div class="input-prepend">
+								<input type="file" name="file" id="file" th:field="*{file}" />
+							</div>
+						</div>
+						<label class="control-label" for="expiration" th:text="#{upload.form.label.expiration}">Expiration</label>
+						<div class="controls">
+							<div class="input-prepend">
+								<select id="expiration" name="expiration">
+									<option value="1" th:text="#{upload.form.label.1minute}">1 minutes</option>
+									<option value="60" th:text="#{upload.form.label.1hour}">1 hour</option>
+									<option value="240" th:text="#{upload.form.label.4hours}">4 hours</option>
+									<option value="1440" th:text="#{upload.form.label.1day}">1 day</option>
+								</select>
+							</div>
+						</div>
+						<div class="controls">
+							<button type="submit" class="btn btn-primary centered" th:text="#{upload.form.submit}">Share</button>
+						</div>
+					</div>
+				</fieldset>
+			</form>
+		</div>
+		<div id="noquickshare" class="hidden span6">
+			<p class="alert alert-error" th:text="#{upload.quickshare.}">No Quick share for you :(</p>
+			<p id="dnd" class="alert alert-warning hidden" th:text="#{upload.quickshare.no.dnd}">Drag and Drop not supported</p>
+			<p id="filereader" class="alert alert-warning hidden" th:text="#{upload.quickshare.no.fileapifilereader}">File API and FileReader API not
+				supported</p>
+			<p id="formdata" class="alert alert-warning hidden" th:text="#{upload.quickshare.no.formdata}">XHR2's FormData is not supported</p>
+			<p id="progress" class="alert alert-warning hidden" th:text="#{upload.quickshare.no.progress}">XHR2's upload progress isn't supported</p>
+		</div>
+		<div id="quickshare" class="hidden span5">
+			<h3 th:text="#{upload.quickshare.label}">Quick share</h3>
+			<p class="alert alert-info" th:text="#{upload.quickshare.explanation}">You may Drag and drop any file to the dropping area below.</p>
+			<article>
+				<div id="drop-area" class="drop-area"></div>
+				<p>
+					Upload progress:
+					<meter id="uploadprogress" min="0" max="100" value="0">0</meter>
+				</p>
+			</article>
+		</div>
+		<div class="alert alert-error hide" id="quickshare-cancelled-error" th:text="#{upload.quickshare.cancel.error}">Your file was not shared!</div>
+		<div class="modal fade hide" id="quickshare-modal">
+			<div class="modal-header">
+				<a class="close" data-dismiss="modal">&times;</a>
+				<h3 th:text="#{upload.quickshare.message}">Don't forget to fill some details!</h3>
+			</div>
+			<div class="modal-body">
+				<div class="control-group">
+					<label class="control-label" for="description" th:text="#{upload.form.label.description}">Description</label>
+					<div class="controls">
+						<div class="input-prepend">
+							<textarea name="quickshare-description" id="quickshare-description" class="xxxlarge"></textarea>
+						</div>
+					</div>
+					<label class="control-label" for="expiration" th:text="#{upload.form.label.expiration}">Expiration</label>
+					<div class="controls">
+						<div class="input-prepend">
+							<select id="quickshare-expiration" name="quickshare-expiration">
+								<option value="1" th:text="#{upload.form.label.1minute}">1 minutes</option>
+								<option value="60" th:text="#{upload.form.label.1hour}">1 hour</option>
+								<option value="240" th:text="#{upload.form.label.4hours}">4 hours</option>
+								<option value="1440" th:text="#{upload.form.label.1day}">1 day</option>
+							</select>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<a id="quickshare-cancel" href="#" class="btn" th:text="#{upload.quickshare.button.cancel}">Cancel</a>
+				<a id="quickshare-upload" href="#" class="btn btn-primary" th:text="#{upload.quickshare.button.upload}">Upload</a>
+			</div>
+		</div>
+	</div>
+	<!-- /container -->
+	<!-- Le javascript
+================================================== -->
+	<!-- Placed at the end of the document so the pages load faster -->
+	<script src="../../js/jquery.js" th:src="@{./js/jquery.js}"></script>
+	<script src="../../js/bootstrap-transition.js" th:src="@{./js/bootstrap-transition.js}"></script>
+	<script src="../../js/bootstrap-alert.js" th:src="@{./js/bootstrap-alert.js}"></script>
+	<script src="../../js/bootstrap-modal.js" th:src="@{./js/bootstrap-modal.js}"></script>
+	<script src="../../js/bootstrap-dropdown.js" th:src="@{./js/bootstrap-dropdown.js}"></script>
+	<script src="../../js/bootstrap-scrollspy.js" th:src="@{./js/bootstrap-scrollspy.js}"></script>
+	<script src="../../js/bootstrap-tab.js" th:src="@{./js/bootstrap-tab.js}"></script>
+	<script src="../../js/bootstrap-tooltip.js" th:src="@{./js/bootstrap-tooltip.js}"></script>
+	<script src="../../js/bootstrap-popover.js" th:src="@{./js/bootstrap-popover.js}"></script>
+	<script src="../../js/bootstrap-button.js" th:src="@{./js/bootstrap-button.js}"></script>
+	<script src="../../js/bootstrap-collapse.js" th:src="@{./js/bootstrap-collapse.js}"></script>
+	<script src="../../js/bootstrap-carousel.js" th:src="@{./js/bootstrap-carousel.js}"></script>
+	<script src="../../js/bootstrap-typeahead.js" th:src="@{./js/bootstrap-typeahead.js}"></script>
+	<script src="../../js/sh4rewithme/detect.js" th:src="@{./js/sh4rewithme/detect.js}"></script>
+	<script src="../../js/sh4rewithme/dnd-upload.js" th:src="@{./js/sh4rewithme/dnd-upload.js}"></script>
+</body>
+</html>

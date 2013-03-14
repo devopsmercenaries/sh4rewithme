@@ -1,0 +1,7 @@
+[sh4rewithme]
+name=sh4rewithme
+enabled=1
+autorefresh=1
+baseurl=http://repository.sh4rewith.me/repos/121/
+type=rpm-md
+gpgcheck=0

@@ -1,0 +1,32 @@
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+           http://www.springframework.org/schema/security
+           http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+	<http security="none" pattern="/" />
+	<http security="none" pattern="/user-registration" />
+	<http security="none" pattern="/css/**" />
+	<http security="none" pattern="/font/**" />
+	<http security="none" pattern="/images/**" />
+	<http security="none" pattern="/js/**" />
+	<http>
+		<intercept-url pattern="/**" access="ROLE_USER" />
+		<openid-login user-service-ref="openIdUserDetailsService">
+			<attribute-exchange identifier-match="http://www.google.com/.*">
+				<openid-attribute name="email"
+					type="http://schema.openid.net/contact/email" required="true"
+					count="2" />
+				<openid-attribute name="firstName"
+					type="http://schema.openid.net/namePerson/first" required="true" />
+				<openid-attribute name="lastName"
+					type="http://schema.openid.net/namePerson/last" required="true" />
+			</attribute-exchange>
+		</openid-login>
+	</http>
+	<authentication-manager>
+		<authentication-provider user-service-ref="openIdUserDetailsService" />
+	</authentication-manager>
+	<beans:bean name="openIdUserDetailsService"
+		class="me.sh4rewith.service.OpenIdUserDetailsService" />
+</beans:beans>

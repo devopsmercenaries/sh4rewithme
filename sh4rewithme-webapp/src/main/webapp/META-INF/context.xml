@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Context>
+	<Manager pathname="" />
+		<Resource
+		name="mail/Session"
+		auth="Container"
+		type="javax.mail.Session"
+		port="465"
+		username="emailsender@sh4rewith.me"
+		password="rr4m6G&amp;U" 
+		      mail.debug="false"
+              mail.user="emailsender@sh4rewith.me"
+              mail.password="rr4m6G&amp;U"
+              mail.transport.protocol="smtp"
+              mail.smtp.host="smtp.gmail.com"
+		      mail.smtp.auth="true"
+              mail.smtp.port="465"
+              mail.smtp.starttls.enable="true"
+			  mail.smtp.socketFactory.port="465"
+			  mail.smtp.socketFactory.class="javax.net.ssl.SSLSocketFactory"
+			  mail.smtp.socketFactory.fallback="false"
+			  />
+</Context>

@@ -1,0 +1,38 @@
+#drop-area {
+	border: 10px dashed #ccc;
+	width: 150px;
+	min-height: 150px;
+	margin: 20px auto;
+}
+
+#drop-area.hover {
+	border: 10px dashed #0c0;
+}
+
+#drop-area img {
+	display: block;
+	margin: 10px auto;
+}
+
+#drop-area p {
+	margin: 10px;
+	font-size: 14px;
+}
+
+meter {
+	width: 100%;
+}
+
+meter:after {
+	content: '%';
+}
+
+.fail {
+	background: #c00;
+	padding: 2px;
+	color: #fff;
+}
+
+.hidden {
+	display: none !important;
+}

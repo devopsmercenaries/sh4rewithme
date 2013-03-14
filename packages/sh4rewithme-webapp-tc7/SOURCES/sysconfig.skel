@@ -1,0 +1,67 @@
+#
+# MyApp Configuration
+#
+
+#
+# If a common @@APP_APP@@ profile is available use it to initialize envs, like JAVA_HOME and PATHs
+#
+
+if [ -f /etc/profile.d/@@PROJECT_NAME@@.sh ]; then
+	source /etc/profile.d/@@PROJECT_NAME@@.sh
+fi
+
+#
+# Vars starting with APP_ are used to replace contents in skeletons files
+#
+
+APP_SERVER_PORT=8005
+APP_HTTP_PORT=8080
+APP_HTTPS_PORT=8443
+APP_AJP_PORT=8009
+
+APP_RMIREGISTRY_PORT=8006
+APP_RMISERVER_PORT=8007
+APP_JVM_ROUTE=myapp
+
+APP_HTTP_MAX_THREADS=150
+APP_HTTP_MIN_SPARE_THREADS=25
+
+APP_HTTPS_MAX_THREADS=150
+APP_HTTPS_MIN_SPARE_THREADS=25
+
+APP_AJP_MAX_THREADS=150
+APP_AJP_MIN_SPARE_THREADS=25
+
+APP_JMX_READER_USER=reader
+APP_JMX_READER_PASSWORD=@@APP_RO_PWD@@
+
+APP_JMX_ADMIN_USER=admin
+APP_JMX_ADMIN_PASSWORD=@@APP_RW_PWD@@
+
+APP_MONGO_FULLURI=mongodb://devops:devops@localhost:27017/devops2devoxx
+
+APP_SMTP_PORT=465
+APP_SMTP_USERNAME=emailsender@sh4rewith.me
+APP_SMTP_PASSWORD=devops2devoxx
+APP_SMTP_HOST=smtp.gmail.com
+
+#
+# Linux Service variables
+#
+CATALINA_HOME="@@APP_APPDIR@@"
+CATALINA_OUT="@@APP_LOGDIR@@/catalina.out"
+CATALINA_PID="/var/run/@@APP_APP@@.pid"
+SHUTDOWN_WAIT=10
+
+#
+# JVM Settings
+#
+APP_JAVA_HOME=
+APP_JAVA_OPTS="-Xms128m -Xmx512m -XX:MaxPermSize=128m -Xss512k"
+# Spring profiles among:
+# prod-mongo (on server), local-mongo (on development desktop), remote-mongo (on mongohq)
+# prod-mail (jndi mail session), local-mail (local smtp), trap-mail (on mailtrap.io)
+# registration-security (only available now, as openid-security is buggy)
+APP_JAVA_OPTS="$APP_JAVA_OPTS -Dspring.profiles.active=prod-mongo,registration-security,prod-mail,init-mongo"
+APP_JAVA_OPTS="$APP_JAVA_OPTS -Djava.security.egd=file:/dev/./urandom"
+APP_JAVA_OPTS="$APP_JAVA_OPTS -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=@@APP_LOGDIR@@"

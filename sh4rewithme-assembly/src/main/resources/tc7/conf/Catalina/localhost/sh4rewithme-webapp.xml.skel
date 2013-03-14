@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Context docBase="${catalina.base}/apps-repo/sh4rewithme-webapp-${project.version}.war">
+	<Manager pathname="" />
+	<Resource
+		name="mail/Session"
+		auth="Container"
+		type="javax.mail.Session"
+		port="@APP_SMTP_PORT@"
+		username="@APP_SMTP_USERNAME@"
+		password="@APP_SMTP_PASSWORD@" 
+		      mail.debug="false"
+              mail.user="@APP_SMTP_USERNAME@"
+              mail.password="@APP_SMTP_PASSWORD@"
+              mail.transport.protocol="smtp"
+              mail.smtp.host="@APP_SMTP_HOST@"
+		      mail.smtp.auth="true"
+              mail.smtp.port="@APP_SMTP_PORT@"
+              mail.smtp.starttls.enable="true"
+			  mail.smtp.socketFactory.port="@APP_SMTP_PORT@"
+			  mail.smtp.socketFactory.class="javax.net.ssl.SSLSocketFactory"
+			  mail.smtp.socketFactory.fallback="false"
+			  />
+</Context>

@@ -1,0 +1,21 @@
+@@APP_LOGDIR@@/catalina.out {
+ copytruncate
+ daily
+ rotate 7
+ compress
+ missingok
+}
+
+@@APP_LOGDIR@@/*.*.log {
+ daily
+ rotate 7
+ compress
+ missingok
+}
+
+@@APP_LOGDIR@@/localhost_access_log.*.txt {
+ daily
+ rotate 7
+ compress
+ missingok
+}

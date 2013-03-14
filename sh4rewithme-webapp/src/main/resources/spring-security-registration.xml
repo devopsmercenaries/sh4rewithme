@@ -1,0 +1,27 @@
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+           http://www.springframework.org/schema/security
+           http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+	<http security="none" pattern="/" />
+	<http security="none" pattern="/user-registration" />
+	<http security="none" pattern="/login" />
+	<http security="none" pattern="/user-registration-success" />
+	<http security="none" pattern="/user-registration-confirm/**" />
+	<http security="none" pattern="/css/**" />
+	<http security="none" pattern="/font/**" />
+	<http security="none" pattern="/images/**" />
+	<http security="none" pattern="/js/**" />
+	<http auto-config="true">
+		<intercept-url pattern="/**" access="ROLE_USER" />
+		<form-login login-page="/login" authentication-failure-url="/login-failure" default-target-url="/welcome"/>
+	</http>
+	<authentication-manager>
+		<authentication-provider user-service-ref="simpleUserDetailsService">
+			<password-encoder hash="sha-256" />
+		</authentication-provider>
+	</authentication-manager>
+	<beans:bean id="simpleUserDetailsService"
+		class="me.sh4rewith.service.SimpleUserDetailsService" />
+</beans:beans>

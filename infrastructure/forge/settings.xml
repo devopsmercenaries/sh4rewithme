@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd"
+          xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+  <servers>
+
+    <server>
+      <id>sh4re.releases</id>
+      <username>deployer</username>
+      <password>{b2AieQ9YvnUH7GuKexwOCyxDCUncMyoELPbCvb0L4r8=}</password>
+    </server>
+
+    <server>
+      <id>sh4re.snapshots</id>
+      <username>deployer</username>
+      <password>{b2AieQ9YvnUH7GuKexwOCyxDCUncMyoELPbCvb0L4r8=}</password>
+    </server>
+
+  </servers>
+
+  <mirrors>
+    <mirror>
+      <!--This sends everything else to /public -->
+      <id>nexus</id>
+      <mirrorOf>*</mirrorOf>
+      <url>http://repository.sh4rewith.me/content/groups/public</url>
+    </mirror>
+  </mirrors>
+  <profiles>
+    <profile>
+      <id>nexus</id>
+      <!--Enable snapshots for the built in central repo to direct -->
+      <!--all requests to nexus via the mirror -->
+      <repositories>
+
+        <repository>
+          <id>central</id>
+          <url>http://central</url>
+          <releases><enabled>true</enabled></releases>
+          <snapshots><enabled>true</enabled></snapshots>
+        </repository>
+
+        <repository>
+          <id>sh4re.releases</id>
+          <url>http://repository.sh4rewith.me/content/repositories/releases</url>
+          <releases>
+            <enabled>true</enabled>
+          </releases>
+          <snapshots>
+            <enabled>false</enabled>
+          </snapshots>
+        </repository>
+
+        <repository>
+          <id>sh4re.snapshots</id>
+          <url>http://repository.sh4rewith.me/content/repositories/snapshots</url>
+          <releases>
+            <enabled>false</enabled>
+          </releases>
+          <snapshots>
+            <enabled>true</enabled>
+          </snapshots>
+        </repository>
+
+      </repositories>
+
+     <pluginRepositories>
+        <pluginRepository>
+          <id>central</id>
+          <url>http://central</url>
+          <releases><enabled>true</enabled></releases>
+          <snapshots><enabled>true</enabled></snapshots>
+        </pluginRepository>
+      </pluginRepositories>
+    </profile>
+  </profiles>
+  <activeProfiles>
+    <!--make the profile active all the time -->
+    <activeProfile>nexus</activeProfile>
+  </activeProfiles>
+</settings>

@@ -1,0 +1,15 @@
+.main-hero {
+	height: 300px;
+	background-color: #edf9ff !important;
+	text-shadow: darkturquoise 1px 1px 4px;
+	-moz-box-shadow: 3px 3px 5px 6px #ccc;
+	-webkit-box-shadow: 3px 3px 5px 6px #ccc;
+	box-shadow: 3px 3px 5px 6px #ccc;
+}
+
+.app-version {
+	text-align: center;
+	width: 100%;
+	background-color:black;
+	color:white;
+}

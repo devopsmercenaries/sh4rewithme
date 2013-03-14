@@ -1,0 +1,11 @@
+target/
+*.iml
+*.swp
+.idea/
+.project
+.classpath
+.settings/
+BUILD/
+BUILDROOT/
+RPMS/
+SRPMS/
