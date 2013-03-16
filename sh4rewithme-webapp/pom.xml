@@ -108,6 +108,17 @@
 		</dependency>
 	</dependencies>
 	<build>
+		<plugins>	
+			<plugin>
+				<groupId>org.apache.tomcat.maven</groupId>
+				<artifactId>tomcat7-maven-plugin</artifactId>
+				<configuration>
+					<systemProperties>
+						<spring.profiles.active>local-mongo,registration-security,init-mongo</spring.profiles.active>
+					</systemProperties>
+				</configuration>
+			</plugin>
+		</plugins>
 		<resources>
 			<!-- Filtering application.properties to add current app version. -->
 			<resource>
