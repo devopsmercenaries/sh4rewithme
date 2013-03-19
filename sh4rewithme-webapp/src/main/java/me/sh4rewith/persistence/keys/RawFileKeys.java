@@ -5,7 +5,7 @@ import java.util.HashSet;
 import org.elasticsearch.common.base.Joiner;
 
 public enum RawFileKeys implements Key {
-	BYTES,
+	STORAGE_COORDINATES,
 	RAW_FILE_STORENAME("raw-file");
 
 	private String keyName;

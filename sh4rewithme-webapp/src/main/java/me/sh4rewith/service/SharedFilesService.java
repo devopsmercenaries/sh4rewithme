@@ -6,6 +6,8 @@ import me.sh4rewith.domain.DoSecured;
 import me.sh4rewith.domain.SharedFile;
 import me.sh4rewith.domain.SharedFileDescriptor;
 import me.sh4rewith.domain.SharedFileInfo;
+import me.sh4rewith.domain.StorageCoordinates;
+import me.sh4rewith.domain.StorageCoordinates.StorageType;
 import me.sh4rewith.persistence.Repositories;
 import me.sh4rewith.utils.exceptions.AccessDeniedException;
 
@@ -96,6 +98,15 @@ public class SharedFilesService {
 
 	public void store(SharedFile sharedFile) {
 		repositories.sharedFilesRepository().store(sharedFile);
+	}
+
+	public byte[] getFileFromStorage(StorageCoordinates storageCoordinates) {
+		return repositories.filesRepository(storageCoordinates.storageType())
+				.retrieve(storageCoordinates);
+	}
+
+	public StorageCoordinates storeFile(StorageType storageType, byte[] bytes) {
+		return repositories.filesRepository(storageType).store(bytes);
 	}
 
 }

@@ -5,8 +5,8 @@ import static me.sh4rewith.persistence.keys.RawFileInfoKeys.ORIGINAL_FILE_NAME;
 import static me.sh4rewith.persistence.keys.RawFileInfoKeys.RAW_FILE_ID;
 import static me.sh4rewith.persistence.keys.RawFileInfoKeys.RAW_FILE_INFO_STORENAME;
 import static me.sh4rewith.persistence.keys.RawFileInfoKeys.SIZE;
-import static me.sh4rewith.persistence.keys.RawFileKeys.BYTES;
 import static me.sh4rewith.persistence.keys.RawFileKeys.RAW_FILE_STORENAME;
+import static me.sh4rewith.persistence.keys.RawFileKeys.STORAGE_COORDINATES;
 import static me.sh4rewith.persistence.keys.SharedFileFootprintKeys.SHARED_FILE_FOOTPRINT_STORENAME;
 import static me.sh4rewith.persistence.keys.SharedFileFootprintKeys.SHARED_FILE_INFO_ID;
 import static me.sh4rewith.persistence.keys.SharedFileInfoKeys.BUDDIES_LIST;
@@ -39,12 +39,15 @@ import me.sh4rewith.persistence.keys.SharedFileFootprintKeys;
 import me.sh4rewith.persistence.keys.SharedFileInfoKeys;
 import me.sh4rewith.persistence.keys.UserInfoKeys;
 import me.sh4rewith.utils.persistence.ElasticSearchUtils;
+import me.sh4rewith.utils.persistence.StorageUtils;
 
 import org.elasticsearch.ElasticSearchException;
 import org.elasticsearch.action.count.CountResponse;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
+import org.elasticsearch.common.xcontent.XContentBuilder;
+import org.elasticsearch.common.xcontent.XContentFactory;
 import org.elasticsearch.common.xcontent.json.JsonXContent;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.FilterBuilders;
@@ -72,26 +75,24 @@ public class ElasticSearchSharedFileRepository implements SharedFilesRepository 
 
 	private void saveFootprint(SharedFileFootprint footprint) {
 		try {
-			esClient.prepareIndex(ElasticSearchUtils.GLOBAL_INDEX,
-					SHARED_FILE_FOOTPRINT_STORENAME.keyName(),
-					footprint.getId())
-					.setSource(
-							JsonXContent
-									.contentBuilder()
-									.startObject()
-									.field(
-											SHARED_FILE_INFO_ID.keyName(),
-											footprint.getSharedFileInfoId())
-									.field(
-											RAW_FILE_ID.keyName(),
-											footprint.getRawFileId())
-									.field(
-											CREATION_DATE.keyName(),
-											footprint.getCreationDate())
-									.field(
-											EXPIRATION_DATE.keyName(),
-											footprint.getCreationDate())
-					)
+			XContentBuilder source = XContentFactory
+					.jsonBuilder()
+					.startObject()
+					.field(SHARED_FILE_INFO_ID.keyName(),
+							footprint.getSharedFileInfoId())
+					.field(RAW_FILE_ID.keyName(),
+							footprint.getRawFileId())
+					.field(CREATION_DATE.keyName(),
+							footprint.getCreationDate())
+					.field(EXPIRATION_DATE.keyName(),
+							footprint.getCreationDate())
+					.endObject();
+			esClient
+					.prepareIndex(
+							ElasticSearchUtils.GLOBAL_INDEX,
+							SHARED_FILE_FOOTPRINT_STORENAME.keyName(),
+							footprint.getId())
+					.setSource(source)
 					.execute().actionGet();
 		} catch (Throwable e) {
 			throw new ElasticSearchException(
@@ -102,33 +103,27 @@ public class ElasticSearchSharedFileRepository implements SharedFilesRepository 
 
 	private void saveSharedFileInfo(SharedFileInfo info) {
 		try {
+			XContentBuilder source = XContentFactory
+					.jsonBuilder()
+					.startObject()
+					.field(OWNER.keyName(),
+							info.getOwner())
+					.field(DESCRIPTION.keyName(),
+							info.getDescription())
+					.field(CREATION_DATE.keyName(),
+							info.getCreationDate())
+					.field(EXPIRATION_DATE.keyName(),
+							info.getCreationDate())
+					.field(PRIVACY_TYPE.keyName(),
+							info.getPrivacy())
+					.array(BUDDIES_LIST.keyName(),
+							info.getPrivacy().getBuddies()
+									.toArray())
+					.endObject();
 			esClient.prepareIndex(ElasticSearchUtils.GLOBAL_INDEX,
 					SHARED_FILE_INFO_STORENAME.keyName(),
 					info.getId())
-					.setSource(
-							JsonXContent
-									.contentBuilder()
-									.startObject()
-									.field(
-											OWNER.keyName(),
-											info.getOwner())
-									.field(
-											DESCRIPTION.keyName(),
-											info.getDescription())
-									.field(
-											CREATION_DATE.keyName(),
-											info.getCreationDate())
-									.field(
-											EXPIRATION_DATE.keyName(),
-											info.getCreationDate())
-									.field(
-											PRIVACY_TYPE.keyName(),
-											info.getPrivacy())
-									.field(
-											BUDDIES_LIST.keyName(),
-											info.getPrivacy().getBuddies()
-													.toArray())
-					)
+					.setSource(source)
 					.execute().actionGet();
 		} catch (Throwable e) {
 			throw new ElasticSearchException(
@@ -139,26 +134,22 @@ public class ElasticSearchSharedFileRepository implements SharedFilesRepository 
 
 	private void saveRawFileInfo(RawFileInfo rawFileInfo) {
 		try {
+			XContentBuilder source = XContentFactory
+					.jsonBuilder()
+					.startObject()
+					.field(SIZE.keyName(),
+							rawFileInfo.getSize())
+					.field(CONTENT_TYPE.keyName(),
+							rawFileInfo.getContentType())
+					.field(ORIGINAL_FILE_NAME.keyName(),
+							rawFileInfo.getOriginalFileName())
+					.field(RAW_FILE_ID.keyName(),
+							rawFileInfo.getRawFileId())
+					.endObject();
 			esClient.prepareIndex(ElasticSearchUtils.GLOBAL_INDEX,
 					RAW_FILE_INFO_STORENAME.keyName(),
 					rawFileInfo.getId())
-					.setSource(
-							JsonXContent
-									.contentBuilder()
-									.startObject()
-									.field(
-											SIZE.keyName(),
-											rawFileInfo.getSize())
-									.field(
-											CONTENT_TYPE.keyName(),
-											rawFileInfo.getContentType())
-									.field(
-											ORIGINAL_FILE_NAME.keyName(),
-											rawFileInfo.getOriginalFileName())
-									.field(
-											RAW_FILE_ID.keyName(),
-											rawFileInfo.getRawFileId())
-					)
+					.setSource(source)
 					.execute().actionGet();
 		} catch (Throwable e) {
 			throw new ElasticSearchException(
@@ -168,17 +159,17 @@ public class ElasticSearchSharedFileRepository implements SharedFilesRepository 
 
 	private void saveRawFile(RawFile rawFile) {
 		try {
+			XContentBuilder source = XContentFactory
+					.jsonBuilder()
+					.startObject()
+					.field(STORAGE_COORDINATES.keyName(),
+							StorageUtils.serializeCoordinates(rawFile
+									.getStorageCoordinates()))
+					.endObject();
 			esClient.prepareIndex(ElasticSearchUtils.GLOBAL_INDEX,
 					RAW_FILE_STORENAME.keyName(),
 					rawFile.getId())
-					.setSource(
-							JsonXContent
-									.contentBuilder()
-									.startObject()
-									.field(
-											BYTES.keyName(),
-											rawFile.getBytes())
-					)
+					.setSource(source)
 					.execute().actionGet();
 		} catch (Throwable e) {
 			throw new ElasticSearchException(
@@ -331,11 +322,12 @@ public class ElasticSearchSharedFileRepository implements SharedFilesRepository 
 					.execute()
 					.actionGet();
 			result = new RawFile.Builder()
-					.setId(
-							response.getId())
-					.setBytes(
-							ElasticSearchUtils.getValueAsBytes(response,
-									BYTES))
+					.setId(response.getId())
+					.setStorageCoordinates(
+							StorageUtils
+									.deserializeCoordinates(ElasticSearchUtils
+											.getValueAsString(response,
+													STORAGE_COORDINATES)))
 					.build();
 		} catch (Throwable e) {
 			throw new ElasticSearchException(
@@ -672,17 +664,17 @@ public class ElasticSearchSharedFileRepository implements SharedFilesRepository 
 				.getPrivacy().getBuddies());
 		newBuddies.add(buddy);
 		try {
+			XContentBuilder source = XContentFactory
+					.jsonBuilder()
+					.startObject()
+					.array(BUDDIES_LIST.keyName(),
+							newBuddies.toArray())
+					.endObject();
 			esClient.prepareUpdate()
 					.setIndex(ElasticSearchUtils.GLOBAL_INDEX)
 					.setType(SHARED_FILE_INFO_STORENAME.keyName())
 					.setId(sharedFileInfo.getId())
-					.setUpsert(JsonXContent
-							.contentBuilder()
-							.startObject()
-							.field(
-									BUDDIES_LIST.keyName(),
-									Arrays.asList(newBuddies.toArray()))
-					)
+					.setUpsert(source)
 					.execute().actionGet();
 		} catch (Throwable e) {
 			throw new ElasticSearchException(

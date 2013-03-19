@@ -6,16 +6,16 @@ public class RawFile {
 
 	private final String id;
 
-	private final byte[] bytes;
+	private final StorageCoordinates coordinates;
 
 	public static class Builder extends ValidatedImmutableBuilderBase<RawFile> {
 		@NotNull
 		private String id;
 		@NotNull
-		private byte[] bytes;
+		private StorageCoordinates coordinates;
 
-		public Builder setBytes(byte[] bytes) {
-			this.bytes = bytes;
+		public Builder setStorageCoordinates(StorageCoordinates coordinates) {
+			this.coordinates = coordinates;
 			return this;
 		}
 
@@ -26,17 +26,17 @@ public class RawFile {
 
 		@Override
 		protected RawFile doBuild() {
-			return new RawFile(id, bytes);
+			return new RawFile(id, coordinates);
 		}
 	}
 
-	public RawFile(String id, byte[] bytes) {
+	public RawFile(String id, StorageCoordinates coordinates) {
 		this.id = id;
-		this.bytes = bytes;
+		this.coordinates = coordinates;
 	}
 
-	public byte[] getBytes() {
-		return bytes;
+	public StorageCoordinates getStorageCoordinates() {
+		return coordinates;
 	}
 
 	public String getId() {

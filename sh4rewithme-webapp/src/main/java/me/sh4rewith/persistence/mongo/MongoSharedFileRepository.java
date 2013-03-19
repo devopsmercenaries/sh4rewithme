@@ -6,7 +6,7 @@ import static me.sh4rewith.persistence.mongo.mappers.RawFileInfoMapper.INFO_SUFF
 import static me.sh4rewith.persistence.mongo.mappers.RawFileInfoMapper.ORIGINAL_FILE_NAME;
 import static me.sh4rewith.persistence.mongo.mappers.RawFileInfoMapper.RAW_FILE_INFO_STORENAME;
 import static me.sh4rewith.persistence.mongo.mappers.RawFileInfoMapper.SIZE;
-import static me.sh4rewith.persistence.mongo.mappers.RawFileMapper.BYTES;
+import static me.sh4rewith.persistence.mongo.mappers.RawFileMapper.STORAGE_COORDINATES;
 import static me.sh4rewith.persistence.mongo.mappers.RawFileMapper.RAW_FILE_STORENAME;
 import static me.sh4rewith.persistence.mongo.mappers.SharedFileFootprintMapper.CREATION_DATE;
 import static me.sh4rewith.persistence.mongo.mappers.SharedFileFootprintMapper.EXPIRATION_DATE;
@@ -321,7 +321,10 @@ public class MongoSharedFileRepository implements SharedFilesRepository {
 		mongo.upsert(contentQuery,
 				new Update().set(MONGO_DOC_ID, rawFile.getId()),
 				RAW_FILE_STORENAME);
-		mongo.upsert(contentQuery, new Update().set(BYTES, rawFile.getBytes()),
+		mongo.upsert(
+				contentQuery,
+				new Update().set(STORAGE_COORDINATES,
+						rawFile.getStorageCoordinates()),
 				RAW_FILE_STORENAME);
 	}
 
