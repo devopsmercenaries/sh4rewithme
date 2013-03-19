@@ -1,11 +1,10 @@
 package me.sh4rewith.service;
 
-
 import java.util.Collection;
 
 import me.sh4rewith.domain.RegistrationStatus;
 import me.sh4rewith.domain.UserInfo;
-import me.sh4rewith.persistence.UsersRepository;
+import me.sh4rewith.persistence.Repositories;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -19,26 +18,22 @@ import com.google.common.collect.Sets;
 public class SimpleUserDetailsService implements UserDetailsService {
 
 	@Autowired
-	private UsersRepository usersRepository;
+	private Repositories repositories;
 
 	public UserDetails loadUserByUsername(String username)
 			throws UsernameNotFoundException {
-		UserInfo info = usersRepository.getUserInfoById(username);
+		UserInfo info = repositories.usersRepository()
+				.getUserInfoById(username);
 		if (info == null) {
 			return null;
 		}
 
 		// FIXME Add support for stored authorities
-		Collection<SimpleGrantedAuthority> authorities =
-				Sets.newHashSet(new SimpleGrantedAuthority("ROLE_USER"));
-		return new User(
-				info.getId(),
-				info.getCredentials(),
+		Collection<SimpleGrantedAuthority> authorities = Sets
+				.newHashSet(new SimpleGrantedAuthority("ROLE_USER"));
+		return new User(info.getId(), info.getCredentials(),
 				info.getRegistrationStatus() == RegistrationStatus.REGISTERED,
-				true,
-				true,
-				true,
-				authorities);
+				true, true, true, authorities);
 	}
 
 }
