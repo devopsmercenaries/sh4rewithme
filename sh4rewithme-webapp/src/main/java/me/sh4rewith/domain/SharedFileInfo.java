@@ -3,7 +3,6 @@ package me.sh4rewith.domain;
 
 import java.util.Date;
 
-import javax.validation.constraints.Future;
 import javax.validation.constraints.NotNull;
 
 import me.sh4rewith.utils.UUIDUtils;
@@ -29,7 +28,6 @@ public class SharedFileInfo {
 		@NotNull
 		private Date creationDate;
 		@NotNull
-		@Future
 		private Date expirationDate;
 		private String id;
 		private Privacy privacy;

@@ -39,17 +39,14 @@ public class UploadController {
 				StorageType.FILESYSTEM,
 				toBeSharedFile.getFile().getBytes());
 		RawFileInfo rawFileInfo = new RawFileInfo.Builder()
-				.setId(rawFileInfoId)
+				.setId(rawFileId + "-info")
 				.setContentType(toBeSharedFile.getFile().getContentType())
 				.setSize(toBeSharedFile.getFile().getSize())
 				.setOriginalFileName(
 						toBeSharedFile.getFile().getOriginalFilename())
-				.setRawFileId(rawFileId)
-				.build();
-		RawFile rawFile = new RawFile.Builder()
-				.setId(rawFileId)
-				.setStorageCoordinates(coordinates)
-				.build();
+				.setRawFileId(rawFileId).build();
+		RawFile rawFile = new RawFile.Builder().setId(rawFileId)
+				.setStorageCoordinates(coordinates).build();
 		SharedFileInfo sharedFileInfo = new SharedFileInfo.Builder()
 				.setDescription(toBeSharedFile.getDescription())
 				.setCreationDate(new Date())
@@ -59,12 +56,9 @@ public class UploadController {
 										.getExpiration()))))
 				.setOwner(
 						SecurityContextHolder.getContext().getAuthentication()
-								.getName())
-				.build();
-		SharedFile sharedFile = new SharedFile.Builder()
-				.setRawFile(rawFile)
-				.setRawFileInfo(rawFileInfo)
-				.setSharedFileInfo(sharedFileInfo)
+								.getName()).build();
+		SharedFile sharedFile = new SharedFile.Builder().setRawFile(rawFile)
+				.setRawFileInfo(rawFileInfo).setSharedFileInfo(sharedFileInfo)
 				.build();
 		service.store(sharedFile);
 		return "redirect:shared-files";

@@ -18,7 +18,6 @@ import static me.sh4rewith.persistence.keys.SharedFileInfoKeys.PRIVACY_TYPE;
 import static me.sh4rewith.persistence.keys.SharedFileInfoKeys.SHARED_FILE_INFO_STORENAME;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -37,7 +36,7 @@ import me.sh4rewith.persistence.keys.RawFileInfoKeys;
 import me.sh4rewith.persistence.keys.RawFileKeys;
 import me.sh4rewith.persistence.keys.SharedFileFootprintKeys;
 import me.sh4rewith.persistence.keys.SharedFileInfoKeys;
-import me.sh4rewith.persistence.keys.UserInfoKeys;
+import me.sh4rewith.utils.persistence.ElasticSearchResponseWrapper;
 import me.sh4rewith.utils.persistence.ElasticSearchUtils;
 import me.sh4rewith.utils.persistence.StorageUtils;
 
@@ -48,9 +47,10 @@ import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentFactory;
-import org.elasticsearch.common.xcontent.json.JsonXContent;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.FilterBuilders;
+import org.elasticsearch.index.query.FilteredQueryBuilder;
+import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.elasticsearch.index.query.OrFilterBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
@@ -80,24 +80,16 @@ public class ElasticSearchSharedFileRepository implements SharedFilesRepository 
 					.startObject()
 					.field(SHARED_FILE_INFO_ID.keyName(),
 							footprint.getSharedFileInfoId())
-					.field(RAW_FILE_ID.keyName(),
-							footprint.getRawFileId())
-					.field(CREATION_DATE.keyName(),
-							footprint.getCreationDate())
+					.field(RAW_FILE_ID.keyName(), footprint.getRawFileId())
+					.field(CREATION_DATE.keyName(), footprint.getCreationDate())
 					.field(EXPIRATION_DATE.keyName(),
-							footprint.getCreationDate())
-					.endObject();
-			esClient
-					.prepareIndex(
-							ElasticSearchUtils.GLOBAL_INDEX,
-							SHARED_FILE_FOOTPRINT_STORENAME.keyName(),
-							footprint.getId())
-					.setSource(source)
-					.execute().actionGet();
+							footprint.getCreationDate()).endObject();
+			esClient.prepareIndex(ElasticSearchUtils.GLOBAL_INDEX,
+					SHARED_FILE_FOOTPRINT_STORENAME.keyName(),
+					footprint.getId()).setSource(source).execute().actionGet();
 		} catch (Throwable e) {
 			throw new ElasticSearchException(
-					"A problem occured while storing Shared File footprint",
-					e);
+					"A problem occured while storing Shared File footprint", e);
 		}
 	}
 
@@ -106,25 +98,18 @@ public class ElasticSearchSharedFileRepository implements SharedFilesRepository 
 			XContentBuilder source = XContentFactory
 					.jsonBuilder()
 					.startObject()
-					.field(OWNER.keyName(),
-							info.getOwner())
-					.field(DESCRIPTION.keyName(),
-							info.getDescription())
-					.field(CREATION_DATE.keyName(),
-							info.getCreationDate())
-					.field(EXPIRATION_DATE.keyName(),
-							info.getCreationDate())
+					.field(OWNER.keyName(), info.getOwner())
+					.field(DESCRIPTION.keyName(), info.getDescription())
+					.field(CREATION_DATE.keyName(), info.getCreationDate())
+					.field(EXPIRATION_DATE.keyName(), info.getCreationDate())
 					.field(PRIVACY_TYPE.keyName(),
-							info.getPrivacy())
+							info.getPrivacy().getType().name())
 					.array(BUDDIES_LIST.keyName(),
-							info.getPrivacy().getBuddies()
-									.toArray())
+							info.getPrivacy().getBuddies().toArray())
 					.endObject();
 			esClient.prepareIndex(ElasticSearchUtils.GLOBAL_INDEX,
-					SHARED_FILE_INFO_STORENAME.keyName(),
-					info.getId())
-					.setSource(source)
-					.execute().actionGet();
+					SHARED_FILE_INFO_STORENAME.keyName(), info.getId())
+					.setSource(source).execute().actionGet();
 		} catch (Throwable e) {
 			throw new ElasticSearchException(
 					"A problem occured while storing Shared File information",
@@ -137,20 +122,15 @@ public class ElasticSearchSharedFileRepository implements SharedFilesRepository 
 			XContentBuilder source = XContentFactory
 					.jsonBuilder()
 					.startObject()
-					.field(SIZE.keyName(),
-							rawFileInfo.getSize())
-					.field(CONTENT_TYPE.keyName(),
-							rawFileInfo.getContentType())
+					.field(SIZE.keyName(), rawFileInfo.getSize())
+					.field(CONTENT_TYPE.keyName(), rawFileInfo.getContentType())
 					.field(ORIGINAL_FILE_NAME.keyName(),
 							rawFileInfo.getOriginalFileName())
-					.field(RAW_FILE_ID.keyName(),
-							rawFileInfo.getRawFileId())
+					.field(RAW_FILE_ID.keyName(), rawFileInfo.getRawFileId())
 					.endObject();
 			esClient.prepareIndex(ElasticSearchUtils.GLOBAL_INDEX,
-					RAW_FILE_INFO_STORENAME.keyName(),
-					rawFileInfo.getId())
-					.setSource(source)
-					.execute().actionGet();
+					RAW_FILE_INFO_STORENAME.keyName(), rawFileInfo.getId())
+					.setSource(source).execute().actionGet();
 		} catch (Throwable e) {
 			throw new ElasticSearchException(
 					"A problem occured while storing Raw File information", e);
@@ -164,13 +144,10 @@ public class ElasticSearchSharedFileRepository implements SharedFilesRepository 
 					.startObject()
 					.field(STORAGE_COORDINATES.keyName(),
 							StorageUtils.serializeCoordinates(rawFile
-									.getStorageCoordinates()))
-					.endObject();
+									.getStorageCoordinates())).endObject();
 			esClient.prepareIndex(ElasticSearchUtils.GLOBAL_INDEX,
-					RAW_FILE_STORENAME.keyName(),
-					rawFile.getId())
-					.setSource(source)
-					.execute().actionGet();
+					RAW_FILE_STORENAME.keyName(), rawFile.getId())
+					.setSource(source).execute().actionGet();
 		} catch (Throwable e) {
 			throw new ElasticSearchException(
 					"A problem occured while storing Raw File", e);
@@ -188,20 +165,8 @@ public class ElasticSearchSharedFileRepository implements SharedFilesRepository 
 					.execute().actionGet();
 			SearchHit[] searchHits = response.getHits().getHits();
 			for (SearchHit searchHit : searchHits) {
-				SharedFileFootprint footprint = new SharedFileFootprint.Builder()
-						.setCreationDate(
-								ElasticSearchUtils.getValueAsDate(searchHit,
-										CREATION_DATE))
-						.setExpiration(
-								ElasticSearchUtils.getValueAsDate(searchHit,
-										EXPIRATION_DATE))
-						.setRawFileId(
-								ElasticSearchUtils.getValueAsString(searchHit,
-										RAW_FILE_ID))
-						.setSharedFileInfoId(
-								ElasticSearchUtils.getValueAsString(searchHit,
-										SHARED_FILE_INFO_ID))
-						.build();
+				SharedFileFootprint footprint = mapSharedFileFootprint(new ElasticSearchResponseWrapper(
+						searchHit));
 				result.add(getSharedFileFromFootprint(footprint));
 			}
 		} catch (Throwable e) {
@@ -226,8 +191,7 @@ public class ElasticSearchSharedFileRepository implements SharedFilesRepository 
 
 	private SharedFile getSharedFileFromFootprint(SharedFileFootprint footprint) {
 		SharedFile sharedFile = new SharedFile.Builder()
-				.setRawFile(
-						getRawFileById(footprint.getRawFileId()))
+				.setRawFile(getRawFileById(footprint.getRawFileId()))
 				.setRawFileInfo(
 						getRawFileInfoByRawFileId(footprint.getRawFileId()))
 				.setSharedFileInfo(
@@ -240,37 +204,16 @@ public class ElasticSearchSharedFileRepository implements SharedFilesRepository 
 		SharedFileInfo result = null;
 		try {
 			GetResponse response = esClient
-					.prepareGet(
-							ElasticSearchUtils.GLOBAL_INDEX,
+					.prepareGet(ElasticSearchUtils.GLOBAL_INDEX,
 							SHARED_FILE_INFO_STORENAME.keyName(),
 							sharedFileInfoId)
-					.setFields(SharedFileInfoKeys.keyNamesArray())
-					.execute()
+					.setFields(SharedFileInfoKeys.keyNamesArray()).execute()
 					.actionGet();
-			Privacy.Type privacyType = Privacy.Type.valueOf(ElasticSearchUtils
-					.getValueAsString(response, PRIVACY_TYPE));
-			Privacy.Builder privacyBuilder = new Privacy.Builder(privacyType);
-			if (privacyType == Privacy.Type.PRIVATE) {
-				List<String> buddies = ElasticSearchUtils
-						.getValueAsListOfStrings(response, BUDDIES_LIST);
-				for (String buddyId : buddies) {
-					privacyBuilder.shareWithBuddy(buddyId);
-				}
-			}
-			result = new SharedFileInfo.Builder()
-					.setId(
-							response.getId())
-					.setOwner(
-							ElasticSearchUtils.getValueAsString(response,
-									OWNER))
-					.setDescription(
-							ElasticSearchUtils.getValueAsString(response,
-									DESCRIPTION))
-					.setPrivacy(privacyBuilder.build())
-					.build();
+			result = mapSharedFileInfo(new ElasticSearchResponseWrapper(
+					response));
 		} catch (Throwable e) {
 			throw new ElasticSearchException(
-					"A problem occured while storing User information", e);
+					"A problem occured while getting Shared File Info by Id", e);
 		}
 		return result;
 	}
@@ -283,26 +226,10 @@ public class ElasticSearchSharedFileRepository implements SharedFilesRepository 
 					.setTypes(RAW_FILE_INFO_STORENAME.keyName())
 					.addFields(RawFileInfoKeys.keyNamesArray())
 					.setQuery(
-							QueryBuilders.fieldQuery(
-									RAW_FILE_ID.keyName(),
-									rawFileId))
-					.execute().actionGet();
+							QueryBuilders.fieldQuery(RAW_FILE_ID.keyName(),
+									rawFileId)).execute().actionGet();
 			SearchHit searchHit = response.getHits().getHits()[0];
-			result = new RawFileInfo.Builder()
-					.setId(searchHit.getId())
-					.setSize(
-							ElasticSearchUtils.getValueAsLong(searchHit,
-									SIZE))
-					.setContentType(
-							ElasticSearchUtils.getValueAsString(searchHit,
-									CONTENT_TYPE))
-					.setOriginalFileName(
-							ElasticSearchUtils.getValueAsString(searchHit,
-									ORIGINAL_FILE_NAME))
-					.setRawFileId(
-							ElasticSearchUtils.getValueAsString(searchHit,
-									RAW_FILE_ID))
-					.build();
+			result = mapRawFileInfo(new ElasticSearchResponseWrapper(searchHit));
 		} catch (Throwable e) {
 			throw new ElasticSearchException(
 					"A problem occured while storing User information", e);
@@ -314,21 +241,11 @@ public class ElasticSearchSharedFileRepository implements SharedFilesRepository 
 		RawFile result = null;
 		try {
 			GetResponse response = esClient
-					.prepareGet(
-							ElasticSearchUtils.GLOBAL_INDEX,
-							RAW_FILE_STORENAME.keyName(),
-							rawFileId)
-					.setFields(RawFileKeys.keyNamesArray())
-					.execute()
+					.prepareGet(ElasticSearchUtils.GLOBAL_INDEX,
+							RAW_FILE_STORENAME.keyName(), rawFileId)
+					.setFields(RawFileKeys.keyNamesArray()).execute()
 					.actionGet();
-			result = new RawFile.Builder()
-					.setId(response.getId())
-					.setStorageCoordinates(
-							StorageUtils
-									.deserializeCoordinates(ElasticSearchUtils
-											.getValueAsString(response,
-													STORAGE_COORDINATES)))
-					.build();
+			result = mapRawFile(new ElasticSearchResponseWrapper(response));
 		} catch (Throwable e) {
 			throw new ElasticSearchException(
 					"A problem occured while storing User information", e);
@@ -347,20 +264,8 @@ public class ElasticSearchSharedFileRepository implements SharedFilesRepository 
 					.execute().actionGet();
 			SearchHit[] searchHits = response.getHits().getHits();
 			for (SearchHit searchHit : searchHits) {
-				SharedFileFootprint footprint = new SharedFileFootprint.Builder()
-						.setCreationDate(
-								ElasticSearchUtils.getValueAsDate(searchHit,
-										CREATION_DATE))
-						.setExpiration(
-								ElasticSearchUtils.getValueAsDate(searchHit,
-										EXPIRATION_DATE))
-						.setRawFileId(
-								ElasticSearchUtils.getValueAsString(searchHit,
-										RAW_FILE_ID))
-						.setSharedFileInfoId(
-								ElasticSearchUtils.getValueAsString(searchHit,
-										SHARED_FILE_INFO_ID))
-						.build();
+				SharedFileFootprint footprint = mapSharedFileFootprint(new ElasticSearchResponseWrapper(
+						searchHit));
 				result.add(getSharedFileDescriptorFromFootprint(footprint));
 			}
 		} catch (Throwable e) {
@@ -386,8 +291,8 @@ public class ElasticSearchSharedFileRepository implements SharedFilesRepository 
 		SharedFileFootprint footprint = getSharedFileFootprintById(footprintId);
 		try {
 			esClient.prepareDelete(ElasticSearchUtils.GLOBAL_INDEX,
-					RAW_FILE_STORENAME.keyName(),
-					footprint.getRawFileId()).execute().actionGet();
+					RAW_FILE_STORENAME.keyName(), footprint.getRawFileId())
+					.execute().actionGet();
 			esClient.prepareDelete(ElasticSearchUtils.GLOBAL_INDEX,
 					RAW_FILE_INFO_STORENAME.keyName(),
 					footprint.getRawFileId() + "-info").execute().actionGet();
@@ -399,34 +304,18 @@ public class ElasticSearchSharedFileRepository implements SharedFilesRepository 
 					.execute().actionGet();
 		} catch (Throwable e) {
 			throw new ElasticSearchException(
-					"A problem occured while deleting by footprint Id",
-					e);
+					"A problem occured while deleting by footprint Id", e);
 		}
 	}
 
 	private SharedFileFootprint getSharedFileFootprintById(String footprintId) {
 		GetResponse response = esClient
-				.prepareGet(
-						ElasticSearchUtils.GLOBAL_INDEX,
-						SHARED_FILE_FOOTPRINT_STORENAME.keyName(),
-						footprintId)
-				.setFields(SharedFileFootprintKeys.keyNamesArray())
-				.execute()
+				.prepareGet(ElasticSearchUtils.GLOBAL_INDEX,
+						SHARED_FILE_FOOTPRINT_STORENAME.keyName(), footprintId)
+				.setFields(SharedFileFootprintKeys.keyNamesArray()).execute()
 				.actionGet();
-		SharedFileFootprint footprint = new SharedFileFootprint.Builder()
-				.setCreationDate(
-						ElasticSearchUtils.getValueAsDate(response,
-								CREATION_DATE))
-				.setExpiration(
-						ElasticSearchUtils.getValueAsDate(response,
-								EXPIRATION_DATE))
-				.setRawFileId(
-						ElasticSearchUtils.getValueAsString(response,
-								RAW_FILE_ID))
-				.setSharedFileInfoId(
-						ElasticSearchUtils.getValueAsString(response,
-								SHARED_FILE_INFO_ID))
-				.build();
+		SharedFileFootprint footprint = mapSharedFileFootprint(new ElasticSearchResponseWrapper(
+				response));
 		return footprint;
 	}
 
@@ -436,29 +325,15 @@ public class ElasticSearchSharedFileRepository implements SharedFilesRepository 
 		try {
 			SearchResponse response = esClient
 					.prepareSearch(ElasticSearchUtils.GLOBAL_INDEX)
-					.setTypes(SHARED_FILE_FOOTPRINT_STORENAME.keyName())
-					.addFields(SharedFileFootprintKeys.keyNamesArray())
+					.setTypes(SHARED_FILE_INFO_STORENAME.keyName())
 					.setQuery(
-							QueryBuilders.fieldQuery(
-									PRIVACY_TYPE.keyName(),
-									Privacy.Type.PUBLIC.name()))
-					.execute().actionGet();
+							QueryBuilders.fieldQuery(PRIVACY_TYPE.keyName(),
+									Privacy.Type.PUBLIC.name())).execute()
+					.actionGet();
 			SearchHit[] searchHits = response.getHits().getHits();
 			for (SearchHit searchHit : searchHits) {
-				SharedFileFootprint footprint = new SharedFileFootprint.Builder()
-						.setCreationDate(
-								ElasticSearchUtils.getValueAsDate(searchHit,
-										CREATION_DATE))
-						.setExpiration(
-								ElasticSearchUtils.getValueAsDate(searchHit,
-										EXPIRATION_DATE))
-						.setRawFileId(
-								ElasticSearchUtils.getValueAsString(searchHit,
-										RAW_FILE_ID))
-						.setSharedFileInfoId(
-								ElasticSearchUtils.getValueAsString(searchHit,
-										SHARED_FILE_INFO_ID))
-						.build();
+				SharedFileFootprint footprint = getSharedFileFootprintBySharedFileInfoId(searchHit
+						.id());
 				result.add(getSharedFileDescriptorFromFootprint(footprint));
 			}
 		} catch (Throwable e) {
@@ -477,45 +352,43 @@ public class ElasticSearchSharedFileRepository implements SharedFilesRepository 
 					FilterBuilders.termFilter(BUDDIES_LIST.keyName(), buddyId));
 			BoolQueryBuilder notPublicQuery = QueryBuilders.boolQuery()
 					.mustNot(
-							QueryBuilders.fieldQuery(
-									PRIVACY_TYPE
-											.keyName(),
-									Privacy.Type.PUBLIC
-											.name()));
+							QueryBuilders.fieldQuery(PRIVACY_TYPE.keyName(),
+									Privacy.Type.PUBLIC.name()));
+			FilteredQueryBuilder query = QueryBuilders.filteredQuery(
+					notPublicQuery, filterOwnedOrBuddied);
+
 			SearchResponse response = esClient
 					.prepareSearch(ElasticSearchUtils.GLOBAL_INDEX)
-					.setTypes(SHARED_FILE_FOOTPRINT_STORENAME.keyName())
-					.addFields(SharedFileFootprintKeys.keyNamesArray())
-					.setQuery(
-							QueryBuilders.filteredQuery(
-									notPublicQuery,
-									filterOwnedOrBuddied
-									)
-					)
-					.execute().actionGet();
+					.setTypes(SHARED_FILE_INFO_STORENAME.keyName())
+					.setQuery(query).execute().actionGet();
 			SearchHit[] searchHits = response.getHits().getHits();
 			for (SearchHit searchHit : searchHits) {
-				SharedFileFootprint footprint = new SharedFileFootprint.Builder()
-						.setCreationDate(
-								ElasticSearchUtils.getValueAsDate(searchHit,
-										CREATION_DATE))
-						.setExpiration(
-								ElasticSearchUtils.getValueAsDate(searchHit,
-										EXPIRATION_DATE))
-						.setRawFileId(
-								ElasticSearchUtils.getValueAsString(searchHit,
-										RAW_FILE_ID))
-						.setSharedFileInfoId(
-								ElasticSearchUtils.getValueAsString(searchHit,
-										SHARED_FILE_INFO_ID))
-						.build();
+				SharedFileFootprint footprint = getSharedFileFootprintBySharedFileInfoId(searchHit
+						.id());
 				result.add(getSharedFileDescriptorFromFootprint(footprint));
 			}
 		} catch (Throwable e) {
 			throw new ElasticSearchException(
-					"A problem occured while storing User information", e);
+					"A problem occured while getting Personal Stream", e);
 		}
 		return result;
+	}
+
+	private SharedFileFootprint getSharedFileFootprintBySharedFileInfoId(
+			String id) {
+		MatchQueryBuilder matchQuery = QueryBuilders.matchPhraseQuery(
+				SHARED_FILE_INFO_ID.keyName(), id);
+		SearchResponse response = esClient
+				.prepareSearch(ElasticSearchUtils.GLOBAL_INDEX)
+				.setTypes(SHARED_FILE_FOOTPRINT_STORENAME.keyName())
+				.setQuery(matchQuery)
+				.addFields(SharedFileFootprintKeys.keyNamesArray()).execute()
+				.actionGet();
+		SearchHit searchHit = response.getHits().getHits()[0];
+		SharedFileFootprint footprint = mapSharedFileFootprint(new ElasticSearchResponseWrapper(
+				searchHit));
+		return footprint;
+
 	}
 
 	@Override
@@ -541,26 +414,14 @@ public class ElasticSearchSharedFileRepository implements SharedFilesRepository 
 
 	private void updatePrivacy(SharedFileInfo sharedFileInfo, Type privacyType) {
 		try {
-			esClient.prepareUpdate()
-					.setIndex(ElasticSearchUtils.GLOBAL_INDEX)
+			esClient.prepareUpdate().setIndex(ElasticSearchUtils.GLOBAL_INDEX)
 					.setType(SHARED_FILE_INFO_STORENAME.keyName())
 					.setId(sharedFileInfo.getId())
-					.setUpsert(JsonXContent
-							.contentBuilder()
-							.startObject()
-							.field(
-									PRIVACY_TYPE.keyName(),
-									privacyType.name())
-							.field(
-									BUDDIES_LIST.keyName(),
-									Arrays.asList(sharedFileInfo.getPrivacy()
-											.getBuddies().toArray()))
-					)
-					.execute().actionGet();
+					.setScript("ctx._source."+PRIVACY_TYPE.keyName()+" = \""+privacyType.name()+"\"").execute()
+					.actionGet();
 		} catch (Throwable e) {
 			throw new ElasticSearchException(
-					"A problem occured while updating Privacy",
-					e);
+					"A problem occured while updating Privacy", e);
 		}
 	}
 
@@ -568,39 +429,14 @@ public class ElasticSearchSharedFileRepository implements SharedFilesRepository 
 	public SharedFileInfo findSharedFileInfoByFootprintId(
 			String sharedFileFootprintId) {
 		SharedFileInfo result = null;
+		SharedFileFootprint sharedFileFootprintById = getSharedFileFootprintById(sharedFileFootprintId);
 		try {
-			SearchResponse response = esClient
-					.prepareSearch(ElasticSearchUtils.GLOBAL_INDEX)
-					.setTypes(SHARED_FILE_INFO_STORENAME.keyName())
-					.addFields(UserInfoKeys.keyNamesArray())
-					.setFilter(
-							FilterBuilders.termFilter(
-									SHARED_FILE_INFO_STORENAME.keyName(),
-									sharedFileFootprintId)
-					)
-					.execute().actionGet();
-			SearchHit[] searchHits = response.getHits().getHits();
-			for (SearchHit searchHit : searchHits) {
-				SharedFileInfo sharedFileInfo = new SharedFileInfo.Builder()
-						.setId(searchHit.getId())
-						.setOwner(
-								ElasticSearchUtils.getValueAsString(searchHit,
-										OWNER))
-						.setCreationDate(
-								ElasticSearchUtils.getValueAsDate(searchHit,
-										CREATION_DATE))
-						.setExpirationDate(
-								ElasticSearchUtils.getValueAsDate(searchHit,
-										EXPIRATION_DATE))
-						.setExpirationDate(
-								ElasticSearchUtils.getValueAsDate(searchHit,
-										EXPIRATION_DATE))
-						.build();
-				result = sharedFileInfo;
-			}
+			result = getSharedFileInfoById(sharedFileFootprintById
+					.getSharedFileInfoId());
 		} catch (Throwable e) {
 			throw new ElasticSearchException(
-					"A problem occured while storing User information", e);
+					"A problem occured while finding SharedFileInfo by Footprint Id",
+					e);
 		}
 		return result;
 	}
@@ -609,8 +445,7 @@ public class ElasticSearchSharedFileRepository implements SharedFilesRepository 
 	public Long countAll() {
 		CountResponse response = esClient
 				.prepareCount(ElasticSearchUtils.GLOBAL_INDEX)
-				.setTypes(SHARED_FILE_FOOTPRINT_STORENAME.keyName())
-				.execute()
+				.setTypes(SHARED_FILE_FOOTPRINT_STORENAME.keyName()).execute()
 				.actionGet();
 		return response.count();
 	}
@@ -632,25 +467,12 @@ public class ElasticSearchSharedFileRepository implements SharedFilesRepository 
 				.setTypes(SHARED_FILE_FOOTPRINT_STORENAME.keyName())
 				.addFields(SharedFileFootprintKeys.keyNamesArray())
 				.setQuery(
-						QueryBuilders.rangeQuery(EXPIRATION_DATE.keyName()).lt(
-								expirationDate))
-				.execute().actionGet();
+						QueryBuilders.rangeQuery(EXPIRATION_DATE.keyName()).gt(
+								expirationDate)).execute().actionGet();
 		SearchHit[] searchHits = response.getHits().getHits();
 		for (SearchHit searchHit : searchHits) {
-			SharedFileFootprint footprint = new SharedFileFootprint.Builder()
-					.setCreationDate(
-							ElasticSearchUtils.getValueAsDate(searchHit,
-									CREATION_DATE))
-					.setExpiration(
-							ElasticSearchUtils.getValueAsDate(searchHit,
-									EXPIRATION_DATE))
-					.setRawFileId(
-							ElasticSearchUtils.getValueAsString(searchHit,
-									RAW_FILE_ID))
-					.setSharedFileInfoId(
-							ElasticSearchUtils.getValueAsString(searchHit,
-									SHARED_FILE_INFO_ID))
-					.build();
+			SharedFileFootprint footprint = mapSharedFileFootprint(new ElasticSearchResponseWrapper(
+					searchHit));
 			result.add(footprint);
 		}
 		return result;
@@ -664,22 +486,69 @@ public class ElasticSearchSharedFileRepository implements SharedFilesRepository 
 				.getPrivacy().getBuddies());
 		newBuddies.add(buddy);
 		try {
-			XContentBuilder source = XContentFactory
-					.jsonBuilder()
+			XContentBuilder source = XContentFactory.jsonBuilder()
 					.startObject()
-					.array(BUDDIES_LIST.keyName(),
-							newBuddies.toArray())
+					.array(BUDDIES_LIST.keyName(), newBuddies.toArray())
 					.endObject();
-			esClient.prepareUpdate()
-					.setIndex(ElasticSearchUtils.GLOBAL_INDEX)
+			esClient.prepareUpdate().setIndex(ElasticSearchUtils.GLOBAL_INDEX)
 					.setType(SHARED_FILE_INFO_STORENAME.keyName())
-					.setId(sharedFileInfo.getId())
-					.setUpsert(source)
-					.execute().actionGet();
+					.setId(sharedFileInfo.getId()).setUpsert(source).execute()
+					.actionGet();
 		} catch (Throwable e) {
 			throw new ElasticSearchException(
-					"A problem occured while updating Privacy",
-					e);
+					"A problem occured while updating Privacy", e);
 		}
 	}
+
+	private static RawFile mapRawFile(ElasticSearchResponseWrapper wrapper) {
+		return new RawFile.Builder()
+				.setId(wrapper.getId())
+				.setStorageCoordinates(
+						StorageUtils.deserializeCoordinates(wrapper
+								.getStringField(STORAGE_COORDINATES))).build();
+	}
+
+	private static SharedFileFootprint mapSharedFileFootprint(
+			ElasticSearchResponseWrapper wrapper) {
+		return new SharedFileFootprint.Builder()
+				.setCreationDate(wrapper.getDateField(CREATION_DATE))
+				.setExpiration(wrapper.getDateField(EXPIRATION_DATE))
+				.setRawFileId(wrapper.getStringField(RAW_FILE_ID))
+				.setSharedFileInfoId(
+						wrapper.getStringField(SHARED_FILE_INFO_ID)).build();
+	}
+
+	private static RawFileInfo mapRawFileInfo(
+			ElasticSearchResponseWrapper wrapper) {
+		return new RawFileInfo.Builder()
+				.setId(wrapper.getId())
+				.setSize(wrapper.getLongField(SIZE))
+				.setContentType(wrapper.getStringField(CONTENT_TYPE))
+				.setOriginalFileName(wrapper.getStringField(ORIGINAL_FILE_NAME))
+				.setRawFileId(wrapper.getStringField(RAW_FILE_ID)).build();
+	}
+
+	private static SharedFileInfo mapSharedFileInfo(
+			ElasticSearchResponseWrapper responseWrapper) {
+		Privacy.Type privacyType = Privacy.Type.valueOf(responseWrapper
+				.getStringField(PRIVACY_TYPE));
+		Privacy.Builder privacyBuilder = new Privacy.Builder(privacyType);
+		if (privacyType == Privacy.Type.PRIVATE) {
+			List<String> buddies = responseWrapper
+					.getListOfStringsField(BUDDIES_LIST);
+			for (String buddyId : buddies) {
+				privacyBuilder.shareWithBuddy(buddyId);
+			}
+		}
+		SharedFileInfo sharedFileInfo = new SharedFileInfo.Builder()
+				.setId(responseWrapper.getId())
+				.setOwner(responseWrapper.getStringField(OWNER))
+				.setDescription(responseWrapper.getStringField(DESCRIPTION))
+				.setCreationDate(responseWrapper.getDateField(CREATION_DATE))
+				.setExpirationDate(
+						responseWrapper.getDateField(EXPIRATION_DATE))
+				.setPrivacy(privacyBuilder.build()).build();
+		return sharedFileInfo;
+	}
+
 }

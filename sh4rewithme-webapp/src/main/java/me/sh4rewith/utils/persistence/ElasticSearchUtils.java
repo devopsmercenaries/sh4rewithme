@@ -42,7 +42,7 @@ public final class ElasticSearchUtils {
 	}
 
 	public static Long getValueAsLong(SearchHit searchHit, Key key) {
-		return (Long) searchHit.field(key.keyName()).getValue();
+		return ((Integer) searchHit.field(key.keyName()).getValue()).longValue();
 	}
 
 	public static Long getValueAsLong(GetResponse response, Key key) {
