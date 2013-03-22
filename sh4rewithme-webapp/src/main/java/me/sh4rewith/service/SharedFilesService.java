@@ -6,7 +6,9 @@ import me.sh4rewith.domain.DoSecured;
 import me.sh4rewith.domain.SharedFile;
 import me.sh4rewith.domain.SharedFileDescriptor;
 import me.sh4rewith.domain.SharedFileInfo;
-import me.sh4rewith.persistence.SharedFilesRepository;
+import me.sh4rewith.domain.StorageCoordinates;
+import me.sh4rewith.domain.StorageCoordinates.StorageType;
+import me.sh4rewith.persistence.Repositories;
 import me.sh4rewith.utils.exceptions.AccessDeniedException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,13 +17,16 @@ import org.springframework.stereotype.Service;
 @Service
 public class SharedFilesService {
 	@Autowired
-	SharedFilesRepository repository;
+	Repositories repositories;
 
-	public SharedFile getRawFileBytes(String sharedFileFootprintId, String buddyId) {
+	public SharedFile getRawFileBytes(String sharedFileFootprintId,
+			String buddyId) {
 		SharedFile result;
-		SharedFileInfo sharedFileInfo = repository.findSharedFileInfoByFootprintId(sharedFileFootprintId);
+		SharedFileInfo sharedFileInfo = repositories.sharedFilesRepository()
+				.findSharedFileInfoByFootprintId(sharedFileFootprintId);
 		if (sharedFileInfo.can(buddyId, DoSecured.DOWNLOAD)) {
-			result = repository.getSharedFileByFootprintId(sharedFileFootprintId);
+			result = repositories.sharedFilesRepository()
+					.getSharedFileByFootprintId(sharedFileFootprintId);
 		} else {
 			throw new AccessDeniedException();
 		}
@@ -29,26 +34,29 @@ public class SharedFilesService {
 	}
 
 	public List<SharedFileDescriptor> getPublicStream(String buddyId) {
-		return repository.getPublicStream(buddyId);
+		return repositories.sharedFilesRepository().getPublicStream(buddyId);
 	}
 
 	public List<SharedFileDescriptor> getPersonalStream(String buddyId) {
-		return repository.getPersonalStream(buddyId);
+		return repositories.sharedFilesRepository().getPersonalStream(buddyId);
 	}
 
 	public void deleteByFootprintId(String sharedFileFootprintId, String buddyId) {
-		SharedFileInfo sharedFileInfo = repository.findSharedFileInfoByFootprintId(sharedFileFootprintId);
+		SharedFileInfo sharedFileInfo = repositories.sharedFilesRepository()
+				.findSharedFileInfoByFootprintId(sharedFileFootprintId);
 		if (sharedFileInfo.can(buddyId, DoSecured.DELETION)) {
-			repository.deleteByFootprintId(sharedFileFootprintId);
+			repositories.sharedFilesRepository().deleteByFootprintId(
+					sharedFileFootprintId);
 		} else {
 			throw new AccessDeniedException();
 		}
 	}
 
 	public void turnPublic(String sharedFileInfoId, String buddyId) {
-		SharedFileInfo sharedFileInfo = repository.findSharedFileInfoById(sharedFileInfoId);
+		SharedFileInfo sharedFileInfo = repositories.sharedFilesRepository()
+				.findSharedFileInfoById(sharedFileInfoId);
 		if (sharedFileInfo.can(buddyId, DoSecured.PRIVACY_UPDATE)) {
-			repository.turnPublic(sharedFileInfo);
+			repositories.sharedFilesRepository().turnPublic(sharedFileInfo);
 		} else {
 			throw new AccessDeniedException();
 		}
@@ -56,34 +64,49 @@ public class SharedFilesService {
 	}
 
 	public void turnPrivate(String sharedFileInfoId, String buddyId) {
-		SharedFileInfo sharedFileInfo = repository.findSharedFileInfoById(sharedFileInfoId);
+		SharedFileInfo sharedFileInfo = repositories.sharedFilesRepository()
+				.findSharedFileInfoById(sharedFileInfoId);
 		if (sharedFileInfo.can(buddyId, DoSecured.PRIVACY_UPDATE)) {
-			repository.turnPrivate(sharedFileInfo);
+			repositories.sharedFilesRepository().turnPrivate(sharedFileInfo);
 		} else {
 			throw new AccessDeniedException();
 		}
 	}
 
 	public void turnProtected(String sharedFileInfoId, String buddyId) {
-		SharedFileInfo sharedFileInfo = repository.findSharedFileInfoById(sharedFileInfoId);
+		SharedFileInfo sharedFileInfo = repositories.sharedFilesRepository()
+				.findSharedFileInfoById(sharedFileInfoId);
 		if (sharedFileInfo.can(buddyId, DoSecured.PRIVACY_UPDATE)) {
-			repository.turnProtected(sharedFileInfo);
+			repositories.sharedFilesRepository().turnProtected(sharedFileInfo);
 		} else {
 			throw new AccessDeniedException();
 		}
 	}
 
-	public void addBuddyToFile(String sharedFileInfoId, String otherBuddyId, String buddyId) {
-		SharedFileInfo sharedFileInfo = repository.findSharedFileInfoById(sharedFileInfoId);
+	public void addBuddyToFile(String sharedFileInfoId, String otherBuddyId,
+			String buddyId) {
+		SharedFileInfo sharedFileInfo = repositories.sharedFilesRepository()
+				.findSharedFileInfoById(sharedFileInfoId);
 		if (sharedFileInfo.can(buddyId, DoSecured.PRIVACY_UPDATE)) {
-			repository.appendBuddyToSharedFileInfoById(sharedFileInfoId, otherBuddyId);
+			repositories.sharedFilesRepository()
+					.appendBuddyToSharedFileInfoById(sharedFileInfoId,
+							otherBuddyId);
 		} else {
 			throw new AccessDeniedException();
 		}
 	}
 
 	public void store(SharedFile sharedFile) {
-		repository.store(sharedFile);
+		repositories.sharedFilesRepository().store(sharedFile);
+	}
+
+	public byte[] getFileFromStorage(StorageCoordinates storageCoordinates) {
+		return repositories.filesRepository(storageCoordinates.storageType())
+				.retrieve(storageCoordinates);
+	}
+
+	public StorageCoordinates storeFile(StorageType storageType, byte[] bytes) {
+		return repositories.filesRepository(storageType).store(bytes);
 	}
 
 }

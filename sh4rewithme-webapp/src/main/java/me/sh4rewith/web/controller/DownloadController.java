@@ -21,11 +21,16 @@ public class DownloadController {
 	SharedFilesService service;
 
 	@RequestMapping("/by-footprint/{sharedFileFootprintId}/{originalFileName}")
-	public void getContent(@PathVariable(value = "sharedFileFootprintId") String sharedFileFootprintId, HttpServletResponse response) throws IOException {
-		final String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+	public void getContent(
+			@PathVariable(value = "sharedFileFootprintId") String sharedFileFootprintId,
+			HttpServletResponse response) throws IOException {
+		final String userId = SecurityContextHolder.getContext()
+				.getAuthentication().getName();
 		SharedFile doc = service.getRawFileBytes(sharedFileFootprintId, userId);
 		response.setContentLength(doc.getRawFileInfo().getSize().intValue());
 		response.setContentType(doc.getRawFileInfo().getContentType());
-		response.getOutputStream().write(doc.getRawFile().getBytes());
+		response.getOutputStream().write(
+				service.getFileFromStorage(doc.getRawFile()
+						.getStorageCoordinates()));
 	}
 }
