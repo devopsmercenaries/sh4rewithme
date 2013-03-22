@@ -1,11 +1,9 @@
 package me.sh4rewith.config.jmx;
 
-
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicReference;
 
-import me.sh4rewith.persistence.SharedFilesRepository;
-import me.sh4rewith.persistence.UsersRepository;
+import me.sh4rewith.persistence.Repositories;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jmx.export.annotation.ManagedAttribute;
@@ -13,22 +11,11 @@ import org.springframework.jmx.export.annotation.ManagedResource;
 import org.springframework.stereotype.Component;
 
 @Component
-@ManagedResource(
-		objectName = "sh4rewith.me:name=ApplicationMetrics",
-		description = "Sh4reWith.me Application Metrics",
-		log = true,
-		logFile = "jmx.log",
-		currencyTimeLimit = 15,
-		persistPolicy = "OnUpdate",
-		persistPeriod = 200,
-		persistLocation = "sh4reWith.me",
-		persistName = "metrics")
+@ManagedResource(objectName = "sh4rewith.me:name=ApplicationMetrics", description = "Sh4reWith.me Application Metrics", log = true, logFile = "jmx.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "sh4reWith.me", persistName = "metrics")
 public class ApplicationMetrics {
 
 	@Autowired
-	private SharedFilesRepository sharedFilesRepository;
-	@Autowired
-	private UsersRepository usersRepository;
+	private Repositories repositories;
 
 	private AtomicReference<Stat> numberOfRegisteredUsers = new AtomicReference<Stat>();
 	private AtomicReference<Stat> numberOfSharedFiles = new AtomicReference<Stat>();
@@ -72,8 +59,10 @@ public class ApplicationMetrics {
 		// if lastUpdate time is inferior to current time - updateRate
 		// Then update the stat from source
 		if (lastUpdate.get().compareTo(date) < 0) {
-			numberOfRegisteredUsers.set(new Stat("NbSharedFiles", sharedFilesRepository.countAll()));
-			numberOfSharedFiles.set(new Stat("NbRegisteredUsers", usersRepository.countAll()));
+			numberOfRegisteredUsers.set(new Stat("NbSharedFiles", repositories
+					.sharedFilesRepository().countAll()));
+			numberOfSharedFiles.set(new Stat("NbRegisteredUsers", repositories
+					.usersRepository().countAll()));
 			lastUpdate.set(new Date());
 		}
 	}
