@@ -68,13 +68,8 @@ body {
 	<div class="navbar navbar-fixed-top">
 		<div class="navbar-inner">
 			<div class="container">
-				<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-				</a>
-				<img src="../../images/Sh4reWithMe.png" th:src="@{./images/Sh4reWithMe.png}" class="header-icon pull-left" />
-				<a class="brand" href="./welcome.html" th:href="@{./welcome}" th:text="#{app.title}">Sh4reWith.me</a>
+				<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+				</a> <img src="../../images/Sh4reWithMe.png" th:src="@{./images/Sh4reWithMe.png}" class="header-icon pull-left" /> <a class="brand" href="./welcome.html" th:href="@{./welcome}" th:text="#{app.title}">Sh4reWith.me</a>
 				<div class="nav-collapse">
 					<ul class="nav">
 						<li class="active"><a href="#" th:text="#{sharedFiles.menu.title}">Cavern</a></li>
@@ -88,48 +83,27 @@ body {
 	<div class="container">
 		<h3 th:text="#{sharedFiles.title}">Your shared files:</h3>
 		<div class="span4 stream-header colorized-public">
-			<span th:text="#{sharedFiles.public.title}">Public stream</span>
-			<br />
-			<span class="label label-info" th:if="${sharedFiles.size()}==0" th:text="#{sharedFiles.no.public.content}">There are no files in this
-				stream.</span>
+			<span th:text="#{sharedFiles.public.title}">Public stream</span> <br /> <span class="label label-info" th:if="${sharedFiles.size()}==0" th:text="#{sharedFiles.no.public.content}">There are no files in this stream.</span>
 		</div>
 		<div class="span4 stream-header colorized-private">
-			<span th:text="#{sharedFiles.personal.title}">Personal stream</span>
-			<br />
-			<span class="label label-info" th:if="${privatelySharedFiles.size()}==0" th:text="#{sharedFiles.no.personal.content}">There are no files in
-				this stream. </span>
+			<span th:text="#{sharedFiles.personal.title}">Personal stream</span> <br /> <span class="label label-info" th:if="${privatelySharedFiles.size()}==0" th:text="#{sharedFiles.no.personal.content}">There are no files in this stream. </span>
 		</div>
 		<div class="span4">
 			<ul th:remove="all-but-first">
 				<li class="stream-item" th:each="sharedFile : ${sharedFiles}">
 					<div class="well">
 						<div class="btn-group stream-item-buttons" th:if="${sharedFile.info.owner}==${currentUser}">
-							<a class="btn btn-mini dropdown-toggle" data-toggle="dropdown" href="#">
-								?
-								<span class="caret"></span>
+							<a class="btn btn-mini dropdown-toggle" data-toggle="dropdown" href="#"> ? <span class="caret"></span>
 							</a>
 							<ul class="dropdown-menu">
-								<li><a href="#" class="delete" th:href="@{'./shared-files/by-footprint/'+${sharedFile.footprint.id}}"
-										th:text="#{sharedFile.button.delete}">Delete file</a></li>
-								<li th:if="${sharedFile.info.privacy.type.name()}!='PRIVATE'"><a href="#" class="change-privacy"
-										th:href="@{'./shared-files/privacy/private/'+${sharedFile.info.id}}" th:text="#{sharedFile.button.turn-private}">Make private</a></li>
-								<li th:if="${sharedFile.info.privacy.type.name()}!='PROTECTED'"><a href="#" class="change-privacy"
-										th:href="@{'./shared-files/privacy/protected/'+${sharedFile.info.id}}" th:text="#{sharedFile.button.turn-protected}">Make protected</a></li>
-								<li th:if="${sharedFile.info.privacy.type.name()}!='PUBLIC'"><a href="#" class="change-privacy"
-										th:href="@{'./shared-files/privacy/public/'+${sharedFile.info.id}}" th:text="#{sharedFile.button.turn-public}">Make public</a></li>
-								<li th:if="${sharedFile.info.privacy.type.name()}=='PRIVATE'"><a href="#" class="add-buddy"
-										th:href="@{'./add-buddy/'+${sharedFile.info.id}+'/'}" th:text="#{sharedFile.button.add-buddy}">Add buddy</a></li>
+								<li><a href="#" class="delete" th:href="@{'./shared-files/by-footprint/'+${sharedFile.footprint.id}}" th:text="#{sharedFile.button.delete}">Delete file</a></li>
+								<li th:if="${sharedFile.info.privacy.type.name()}!='PRIVATE'"><a href="#" class="change-privacy" th:href="@{'./shared-files/privacy/private/'+${sharedFile.info.id}}" th:text="#{sharedFile.button.turn-private}">Make private</a></li>
+								<li th:if="${sharedFile.info.privacy.type.name()}!='PROTECTED'"><a href="#" class="change-privacy" th:href="@{'./shared-files/privacy/protected/'+${sharedFile.info.id}}" th:text="#{sharedFile.button.turn-protected}">Make protected</a></li>
+								<li th:if="${sharedFile.info.privacy.type.name()}!='PUBLIC'"><a href="#" class="change-privacy" th:href="@{'./shared-files/privacy/public/'+${sharedFile.info.id}}" th:text="#{sharedFile.button.turn-public}">Make public</a></li>
+								<li th:if="${sharedFile.info.privacy.type.name()}=='PRIVATE'"><a href="#" class="add-buddy" th:href="@{'./add-buddy/'+${sharedFile.info.id}+'/'}" th:text="#{sharedFile.button.add-buddy}">Add buddy</a></li>
 							</ul>
 						</div>
-						<a href="#" th:href="@{'./download/by-footprint/'+${sharedFile.footprint.id}+'/'+${sharedFile.rawFileInfo.originalFileName}}"
-							th:text="${sharedFile.info.description}"> My phony file</a>
-						<br />
-						<span th:text="${sharedFile.rawFileInfo.contentType}">application/ms-word</span>
-						<span sh4re:binarySize="${sharedFile.rawFileInfo.size}">(55 MegaBytes)</span>
-						<br />
-						<span th:text="#{sharedFile.owner.label}+' '+ ${sharedFile.info.owner}">shared by pagregoire</span>
-						<br />
-						<span sh4re:relativeDate="${sharedFile.footprint.creationDate}">(5 minutes ago)</span>
+						<a class="public" href="#" th:href="@{'./download/by-footprint/'+${sharedFile.footprint.id}+'/'+${sharedFile.rawFileInfo.originalFileName}}" th:text="${sharedFile.info.description}"> My phony file</a> <br /> <span th:text="${sharedFile.rawFileInfo.contentType}">application/ms-word</span> <span sh4re:binarySize="${sharedFile.rawFileInfo.size}">(55 MegaBytes)</span> <br /> <span th:text="#{sharedFile.owner.label}+' '+ ${sharedFile.info.owner}">shared by pagregoire</span> <br /> <span sh4re:relativeDate="${sharedFile.footprint.creationDate}">(5 minutes ago)</span>
 						<div class="alert alert-info" id="buddies" th:if="${sharedFile.info.privacy.buddies.size()}>0">
 							<h6 th:text="#{sharedFile.buddies.label}">Shared with</h6>
 							<ul>
@@ -140,28 +114,12 @@ body {
 				</li>
 				<li class="stream-item">
 					<div class="well">
-						<a href="#" class="close delete">&times;</a>
-						<a href="#"> My phony file 2</a>
-						<br />
-						<span>application/ms-word</span>
-						<br />
-						<span>(55 MegaBytes)</span>
-						<br />
-						<span>shared by pagregoire</span>
-						<br />
+						<a href="#" class="close delete">&times;</a> <a href="#"> My phony file 2</a> <br /> <span>application/ms-word</span> <br /> <span>(55 MegaBytes)</span> <br /> <span>shared by pagregoire</span> <br />
 					</div>
 				</li>
 				<li class="stream-item">
 					<div class="well">
-						<a href="#" class="close delete">&times;</a>
-						<a href="#"> My phony file</a>
-						<br />
-						<span>application/ms-word</span>
-						<br />
-						<span>(55 MegaBytes)</span>
-						<br />
-						<span>shared by pagregoire</span>
-						<br />
+						<a href="#" class="close delete">&times;</a> <a href="#"> My phony file</a> <br /> <span>application/ms-word</span> <br /> <span>(55 MegaBytes)</span> <br /> <span>shared by pagregoire</span> <br />
 					</div>
 				</li>
 			</ul>
@@ -170,35 +128,19 @@ body {
 			<ul th:remove="all-but-first">
 				<li class="stream-item" th:each="sharedFile : ${privatelySharedFiles}">
 					<div class="well">
-						<img src="../../images/private.png" th:if="${sharedFile.info.privacy.type.name()}=='PRIVATE'" th:src="@{./images/private.png}" /> <img
-							src="../../images/protected.png" th:if="${sharedFile.info.privacy.type.name()}=='PROTECTED'" th:src="@{./images/protected.png}" />
+						<img class="private" src="../../images/private.png" th:if="${sharedFile.info.privacy.type.name()}=='PRIVATE'" th:src="@{./images/private.png}" /> <img class="protected" src="../../images/protected.png" th:if="${sharedFile.info.privacy.type.name()}=='PROTECTED'" th:src="@{./images/protected.png}" />
 						<div class="btn-group stream-item-buttons" th:if="${sharedFile.info.owner}==${currentUser}">
-							<a class="btn btn-mini dropdown-toggle" data-toggle="dropdown" href="#">
-								?
-								<span class="caret"></span>
+							<a class="btn btn-mini dropdown-toggle" data-toggle="dropdown" href="#"> ? <span class="caret"></span>
 							</a>
 							<ul class="dropdown-menu">
-								<li><a href="#" class="delete" th:href="@{'./shared-files/by-footprint/'+${sharedFile.footprint.id}}"
-										th:text="#{sharedFile.button.delete}">Delete file</a></li>
-								<li th:if="${sharedFile.info.privacy.type.name()}!='PRIVATE'"><a href="#" class="change-privacy"
-										th:href="@{'./shared-files/privacy/private/'+${sharedFile.info.id}}" th:text="#{sharedFile.button.turn-private}">Make private</a></li>
-								<li th:if="${sharedFile.info.privacy.type.name()}!='PROTECTED'"><a href="#" class="change-privacy"
-										th:href="@{'./shared-files/privacy/protected/'+${sharedFile.info.id}}" th:text="#{sharedFile.button.turn-protected}">Make protected</a></li>
-								<li th:if="${sharedFile.info.privacy.type.name()}!='PUBLIC'"><a href="#" class="change-privacy"
-										th:href="@{'./shared-files/privacy/public/'+${sharedFile.info.id}}" th:text="#{sharedFile.button.turn-public}">Make public</a></li>
-								<li th:if="${sharedFile.info.privacy.type.name()}=='PRIVATE'"><a href="#" class="add-buddy"
-										th:href="@{'./shared-files/by-info-id/'+${sharedFile.info.id}+'/buddies/'}" th:text="#{sharedFile.button.add-buddy}">Add buddy</a></li>
+								<li><a href="#" class="delete" th:href="@{'./shared-files/by-footprint/'+${sharedFile.footprint.id}}" th:text="#{sharedFile.button.delete}">Delete file</a></li>
+								<li th:if="${sharedFile.info.privacy.type.name()}!='PRIVATE'"><a href="#" class="change-privacy" th:href="@{'./shared-files/privacy/private/'+${sharedFile.info.id}}" th:text="#{sharedFile.button.turn-private}">Make private</a></li>
+								<li th:if="${sharedFile.info.privacy.type.name()}!='PROTECTED'"><a href="#" class="change-privacy" th:href="@{'./shared-files/privacy/protected/'+${sharedFile.info.id}}" th:text="#{sharedFile.button.turn-protected}">Make protected</a></li>
+								<li th:if="${sharedFile.info.privacy.type.name()}!='PUBLIC'"><a href="#" class="change-privacy" th:href="@{'./shared-files/privacy/public/'+${sharedFile.info.id}}" th:text="#{sharedFile.button.turn-public}">Make public</a></li>
+								<li th:if="${sharedFile.info.privacy.type.name()}=='PRIVATE'"><a href="#" class="add-buddy" th:href="@{'./shared-files/by-info-id/'+${sharedFile.info.id}+'/buddies/'}" th:text="#{sharedFile.button.add-buddy}">Add buddy</a></li>
 							</ul>
 						</div>
-						<a href="#" th:href="@{'./download/by-footprint/'+${sharedFile.footprint.id}+'/'+${sharedFile.rawFileInfo.originalFileName}}"
-							th:text="${sharedFile.info.description}"> My phony file</a>
-						<br />
-						<span th:text="${sharedFile.rawFileInfo.contentType}">application/ms-word</span>
-						<span sh4re:binarySize="${sharedFile.rawFileInfo.size}">(55 MegaBytes)</span>
-						<br />
-						<span th:text="#{sharedFile.owner.label}+' '+ ${sharedFile.info.owner}">shared by pagregoire</span>
-						<br />
-						<span sh4re:relativeDate="${sharedFile.footprint.creationDate}">(5 minutes ago)</span>
+						<a th:class="${sharedFile.info.privacy.type.name()}" href="#" th:href="@{'./download/by-footprint/'+${sharedFile.footprint.id}+'/'+${sharedFile.rawFileInfo.originalFileName}}" th:text="${sharedFile.info.description}"> My phony file</a> <br /> <span th:text="${sharedFile.rawFileInfo.contentType}">application/ms-word</span> <span sh4re:binarySize="${sharedFile.rawFileInfo.size}">(55 MegaBytes)</span> <br /> <span th:text="#{sharedFile.owner.label}+' '+ ${sharedFile.info.owner}">shared by pagregoire</span> <br /> <span sh4re:relativeDate="${sharedFile.footprint.creationDate}">(5 minutes ago)</span>
 						<div class="alert alert-info" id="buddies" th:if="${sharedFile.info.privacy.buddies.size()}>0">
 							<h6 th:text="#{sharedFile.buddies.label}">Shared with</h6>
 							<ul>
@@ -209,30 +151,12 @@ body {
 				</li>
 				<li class="stream-item">
 					<div class="well">
-						<img src="../../images/private.png" />
-						<a href="#" class="close delete">&times;</a>
-						<a href="#"> My phony file 2</a>
-						<br />
-						<span>application/ms-word</span>
-						<br />
-						<span>(55 MegaBytes)</span>
-						<br />
-						<span>shared by pagregoire</span>
-						<br />
+						<img src="../../images/private.png" /> <a href="#" class="close delete">&times;</a> <a href="#"> My phony file 2</a> <br /> <span>application/ms-word</span> <br /> <span>(55 MegaBytes)</span> <br /> <span>shared by pagregoire</span> <br />
 					</div>
 				</li>
 				<li class="stream-item">
 					<div class="well">
-						<img src="../../images/protected.png" />
-						<a href="#" class="close delete">&times;</a>
-						<a href="#"> My phony file</a>
-						<br />
-						<span>application/ms-word</span>
-						<br />
-						<span>(55 MegaBytes)</span>
-						<br />
-						<span>shared by pagregoire</span>
-						<br />
+						<img src="../../images/protected.png" /> <a href="#" class="close delete">&times;</a> <a href="#"> My phony file</a> <br /> <span>application/ms-word</span> <br /> <span>(55 MegaBytes)</span> <br /> <span>shared by pagregoire</span> <br />
 					</div>
 				</li>
 			</ul>
@@ -257,8 +181,7 @@ body {
 			</div>
 		</div>
 		<div class="modal-footer">
-			<a id="addbuddy-cancel" href="#" class="btn" th:text="#{sharedFile.addbuddy.modal.button.cancel}">Cancel</a>
-			<a id="addbuddy-validate" href="#" class="btn btn-primary" th:text="#{sharedFile.addbuddy.modal.button.validate}">Add buddy</a>
+			<a id="addbuddy-cancel" href="#" class="btn" th:text="#{sharedFile.addbuddy.modal.button.cancel}">Cancel</a> <a id="addbuddy-validate" href="#" class="btn btn-primary" th:text="#{sharedFile.addbuddy.modal.button.validate}">Add buddy</a>
 		</div>
 	</div>
 	<!-- /container -->

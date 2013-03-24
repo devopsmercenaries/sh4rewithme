@@ -15,7 +15,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.WebDriver;
 
-@Story(Application.LoginAndRegistration.Login.class)
+@Story(Application.LoginAndRegistration.Registration.class)
 @RunWith(ThucydidesRunner.class)
 public class RegistrationStoryTest {
 
