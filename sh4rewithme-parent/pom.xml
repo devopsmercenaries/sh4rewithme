@@ -10,13 +10,25 @@
 	<modules>
 		<module>../sh4rewithme-webapp</module>
 		<module>../sh4rewithme-assembly</module>
-	</modules>
+<!--
+                <module>../sh4rewithme-webtests</module>
+                <module>../sh4rewithme-perf</module>
+-->
+        </modules>
+        
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<spring.release.version>3.1.1.RELEASE</spring.release.version>
 		<spring-security.version>3.1.0.RELEASE</spring-security.version>
 		<javamail.version>1.4</javamail.version>
+		<gatling.version>1.4.5</gatling.version>
+
+		<http.host>localhost</http.host>
+		<http.port>9090</http.port>
+		<webapp.name>sh4rewithme-webapp</webapp.name>
+
 	</properties>
+
 	<repositories>
 		<repository>
 			<id>people.apache.snapshots</id>
@@ -27,6 +39,11 @@
 			<snapshots>
 				<enabled>true</enabled>
 			</snapshots>
+		</repository>
+		<repository>
+			<id>excilys</id>
+			<name>Excilys Repository</name>
+			<url>http://repository.excilys.com/content/groups/public</url>
 		</repository>
 	</repositories>
 
@@ -41,6 +58,11 @@
 			<snapshots>
 				<enabled>true</enabled>
 			</snapshots>
+		</pluginRepository>
+		<pluginRepository>
+			<id>excilys</id>
+			<name>Excilys Repository</name>
+			<url>http://repository.excilys.com/content/groups/public</url>
 		</pluginRepository>
 	</pluginRepositories>
 
@@ -212,12 +234,12 @@
 					<artifactId>tomcat7-maven-plugin</artifactId>
 					<version>2.0</version>
 					<configuration>
-						<port>9090</port>
+						<port>${http.port}</port>
 						<path>/${project.artifactId}</path>
 						<contextFile>${baseDir}/src/main/webapp/META-INF/context.xml</contextFile>
 						<systemProperties>
-						    <JAVA_OPTS>-Xms256m -Xmx512m -XX:MaxPermSize=256m</JAVA_OPTS>
-  						</systemProperties>
+							<JAVA_OPTS>-Xms256m -Xmx512m -XX:MaxPermSize=256m</JAVA_OPTS>
+						</systemProperties>
 					</configuration>
 					<dependencies>
 						<dependency>
