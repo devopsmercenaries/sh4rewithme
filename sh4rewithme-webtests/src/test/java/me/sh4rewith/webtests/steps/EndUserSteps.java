@@ -1,15 +1,17 @@
 package me.sh4rewith.webtests.steps;
 
-import org.hamcrest.MatcherAssert;
-
 import me.sh4rewith.webtests.pages.LoginPage;
 import me.sh4rewith.webtests.pages.RegistrationPage;
 import me.sh4rewith.webtests.pages.RegistrationSuccessPage;
+import me.sh4rewith.webtests.pages.SharedFilesPage;
+import me.sh4rewith.webtests.pages.UploadPage;
 import me.sh4rewith.webtests.pages.WelcomePage;
 import net.thucydides.core.annotations.Step;
 import net.thucydides.core.annotations.StepGroup;
 import net.thucydides.core.pages.Pages;
 import net.thucydides.core.steps.ScenarioSteps;
+
+import org.hamcrest.MatcherAssert;
 
 public class EndUserSteps extends ScenarioSteps {
 
@@ -88,6 +90,24 @@ public class EndUserSteps extends ScenarioSteps {
 		RegistrationSuccessPage registrationSuccessPage = getPages()
 				.currentPageAt(RegistrationSuccessPage.class);
 		registrationSuccessPage.click_on_confirmation_link();
+	}
+
+	@Step
+	public void upload_file(String description, String filename,
+			String expirationInMinutes) {
+		UploadPage uploadPage = getPages().currentPageAt(UploadPage.class);
+		uploadPage.open();
+		uploadPage.enter_description(description);
+		uploadPage.enter_file(filename);
+		uploadPage.enter_expiration(expirationInMinutes);
+		uploadPage.submit_upload();
+	}
+
+	@Step
+	public void has_file_in_his_private_stream(String description) {
+		SharedFilesPage sharedFilesPage=getPages().currentPageAt(SharedFilesPage.class);
+		sharedFilesPage.open();
+		sharedFilesPage.has_file_in_private_stream(description);
 	}
 
 }

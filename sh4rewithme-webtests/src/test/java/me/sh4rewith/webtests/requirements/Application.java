@@ -6,6 +6,11 @@ public class Application {
     @Feature
     public class LoginAndRegistration {
         public class Login {}
-        public class Register {}
+        public class Registration {}
+    }
+    
+    @Feature
+    public class FileManagement {
+    	public class FileUpload {}
     }
 }
