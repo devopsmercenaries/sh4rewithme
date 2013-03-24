@@ -43,13 +43,8 @@ body {
 	<div class="navbar navbar-fixed-top">
 		<div class="navbar-inner">
 			<div class="container">
-				<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-				</a>
-				<img src="../../images/Sh4reWithMe.png" th:src="@{./images/Sh4reWithMe.png}" class="header-icon pull-left" />
-				<a class="brand" href="#" th:href="@{./welcome}" th:text="#{app.title}">Sh4reWith.me</a>
+				<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+				</a> <img src="../../images/Sh4reWithMe.png" th:src="@{./images/Sh4reWithMe.png}" class="header-icon pull-left" /> <a class="brand" href="#" th:href="@{./welcome}" th:text="#{app.title}">Sh4reWith.me</a>
 			</div>
 		</div>
 	</div>
@@ -57,8 +52,9 @@ body {
 		<h1 th:text="#{userRegistrationSuccess.title}">Registration Success :)</h1>
 		<p class="main-text">
 			<img src="../../images/Sh4reWithMe.png" th:src="@{./images/Sh4reWithMe.png}" class="main-icon" />
-			<span th:text="#{userRegistrationSuccess.text}">You registered successfully. In order to validate your registration, an email has been sent to
-				you with a validation link.</span>
+			<span th:if="${mailConfirmation}" th:text="#{userRegistrationSuccess.text}">You registered successfully. In order to validate your registration, an email has been sent to you with a validation link.</span>
+			<br/>
+			<a id="confirmation_link" href="#" th:if="${directConfirmation}" th:href="@{'./user-registration-confirm/'+${confirmationId}}" th:text="#{userRegistrationSuccess.confirmationLink.text}">Click here to confirm your registration (this should not be visible in a secured setup)</a>
 		</p>
 	</div>
 	<!-- /container -->

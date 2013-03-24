@@ -9,6 +9,7 @@ import javax.validation.Valid;
 
 import me.sh4rewith.domain.RegistrationStatus;
 import me.sh4rewith.domain.UserInfo;
+import me.sh4rewith.service.ConfirmationMechanism;
 import me.sh4rewith.service.UsersService;
 import me.sh4rewith.utils.DigestUtils;
 import me.sh4rewith.web.forms.UserRegistration;
@@ -31,8 +32,9 @@ public class UserRegistrationController {
 	@RequestMapping(
 			value = "/user-registration",
 			method = RequestMethod.POST)
-	public String index(@Valid UserRegistration userRegistration, BindingResult bindingResult, ModelMap modelMap) throws IOException {
-		String result = "redirect:user-registration-success";
+	public String index(@Valid UserRegistration userRegistration,
+			BindingResult bindingResult, ModelMap modelMap) throws IOException {
+		String result = "userRegistrationSuccess";
 		if (!bindingResult.hasErrors()) {
 			UserInfo userInfo = new UserInfo.Builder(userRegistration.getId())
 					.setEmail(userRegistration.getEmail())
@@ -47,9 +49,23 @@ public class UserRegistrationController {
 							userRegistration.getPassword())
 					)
 					.build();
-			service.registerAndSendConfirmationEmail(userInfo);
+			ConfirmationMechanism confirmationMechanism = service
+					.registerAndNotifyConfirmation(userInfo);
+			switch (confirmationMechanism) {
+			case MAIL:
+				modelMap.addAttribute("mailConfirmation", true);
+				break;
+			case DIRECT:
+				modelMap.addAttribute("directConfirmation", true);
+				modelMap.addAttribute("confirmationId",
+						confirmationMechanism.getConfirmationId());
+				break;
+			default:
+				break;
+			}
 		} else {
-			// HACK because Thymeleaf Spring 3 support doesn't (yet) support global errors.
+			// HACK because Thymeleaf Spring 3 support doesn't (yet) support
+			// global errors.
 			// Therefore I copy them as field errors with id 'global_error'.
 			List<List<String>> errorsList = new ArrayList<List<String>>();
 			for (ObjectError globalError : bindingResult.getGlobalErrors()) {
@@ -75,15 +91,17 @@ public class UserRegistrationController {
 	@RequestMapping(
 			value = "/user-registration-success",
 			method = RequestMethod.GET)
-	public String getRegistrationSuccess() {
+	public String getRegistrationSuccess(ModelMap model) {
 		return "userRegistrationSuccess";
 	}
 
 	@RequestMapping(
 			value = "/user-registration-confirm/{userInfoHash}",
 			method = RequestMethod.GET)
-	public String confirm(@PathVariable("userInfoHash") String userInfoHash, ModelMap modelMap) {
-		UserInfo userInfo = service.changeRegistrationStatusByHash(userInfoHash, RegistrationStatus.REGISTERED);
+	public String confirm(@PathVariable("userInfoHash") String userInfoHash,
+			ModelMap modelMap) {
+		UserInfo userInfo = service.changeRegistrationStatusByHash(
+				userInfoHash, RegistrationStatus.REGISTERED);
 		modelMap.put("userId", userInfo.getId());
 		return "redirect:/login";
 	}

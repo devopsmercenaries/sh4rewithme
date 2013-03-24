@@ -1,5 +1,6 @@
 package me.sh4rewith.persistence.elasticsearch;
 
+import static me.sh4rewith.persistence.keys.SharedFileInfoKeys.PRIVACY_TYPE;
 import static me.sh4rewith.persistence.keys.UserInfoKeys.CREDENTIALS;
 import static me.sh4rewith.persistence.keys.UserInfoKeys.EMAIL;
 import static me.sh4rewith.persistence.keys.UserInfoKeys.FIRST_NAME;
@@ -82,27 +83,30 @@ public class ElasticSearchUsersRepository implements UsersRepository {
 					.setFields(UserInfoKeys.keyNamesArray())
 					.execute()
 					.actionGet();
-			result = new UserInfo.Builder(userId)
-					.setEmail(
-							ElasticSearchUtils
-									.getValueAsString(response, EMAIL))
-					.setFirstname(
-							ElasticSearchUtils.getValueAsString(response,
-									FIRST_NAME))
-					.setLastname(
-							ElasticSearchUtils.getValueAsString(response,
-									LAST_NAME))
-					.setCredentials(
-							ElasticSearchUtils.getValueAsString(response,
-									CREDENTIALS))
-					.setRegistrationStatus(
-							RegistrationStatus.valueOf(
-									ElasticSearchUtils.getValueAsString(
-											response,
-											REGISTRATION_STATUS)))
-					.setUserHash(
-							ElasticSearchUtils.getValueAsString(response, HASH))
-					.build();
+			if (response.exists()) {
+				result = new UserInfo.Builder(userId)
+						.setEmail(
+								ElasticSearchUtils
+										.getValueAsString(response, EMAIL))
+						.setFirstname(
+								ElasticSearchUtils.getValueAsString(response,
+										FIRST_NAME))
+						.setLastname(
+								ElasticSearchUtils.getValueAsString(response,
+										LAST_NAME))
+						.setCredentials(
+								ElasticSearchUtils.getValueAsString(response,
+										CREDENTIALS))
+						.setRegistrationStatus(
+								RegistrationStatus.valueOf(
+										ElasticSearchUtils.getValueAsString(
+												response,
+												REGISTRATION_STATUS)))
+						.setUserHash(
+								ElasticSearchUtils.getValueAsString(response,
+										HASH))
+						.build();
+			}
 		} catch (Throwable e) {
 			throw new ElasticSearchException(
 					"A problem occured while storing User information", e);
@@ -214,17 +218,11 @@ public class ElasticSearchUsersRepository implements UsersRepository {
 			RegistrationStatus registrationStatus) {
 		String id = getUserInfoByHash(userInfoHash).getId();
 		try {
-			XContentBuilder upsert = XContentFactory
-					.jsonBuilder()
-					.startObject()
-					.field(REGISTRATION_STATUS.keyName(),
-							registrationStatus)
-					.endObject();
 			esClient.prepareUpdate()
 					.setIndex("sh4rewithme")
 					.setType(USER_INFO_STORENAME.keyName())
 					.setId(id)
-					.setUpsert(upsert)
+					.setScript("ctx._source."+REGISTRATION_STATUS.keyName()+" = \""+registrationStatus.name()+"\"")
 					.execute().actionGet();
 		} catch (Throwable e) {
 			throw new ElasticSearchException(

@@ -18,7 +18,10 @@ public class WelcomePage extends PageObject {
 	}
 
 	public Boolean user_info_is_available() {
-		return userInfoMenu.getAttribute("href").contains(
-				"./user-info");
+		return userInfoMenu.isDisplayed();
+	}
+
+	public Boolean user_info_is_not_available() {
+		return !userInfoMenu.isDisplayed();
 	}
 }
