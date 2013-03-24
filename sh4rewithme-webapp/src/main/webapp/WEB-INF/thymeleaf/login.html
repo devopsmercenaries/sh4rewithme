@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sh4re="http://www.sh4rewith.me">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sh4re="http://www.sh4rewith.me">
 <head>
 <meta charset="utf-8" />
 <title th:text="#{app.title}">Sh4reWith.me</title>
@@ -17,35 +18,48 @@ body {
 	text-align: center;
 }
 </style>
-<link href="../../css/bootstrap.css" rel="stylesheet" th:href="@{./css/bootstrap.css}" />
-<link href="../../css/sh4rewithme/header.css" rel="stylesheet" th:href="@{./css/sh4rewithme/header.css}" />
-<link href="../../css/sh4rewithme/body.css" rel="stylesheet" th:href="@{./css/sh4rewithme/body.css}" />
-<link href="../../css/font-awesome.css" rel="stylesheet" th:href="@{./css/font-awesome.css}" />
+<link href="../../css/bootstrap.css" rel="stylesheet"
+	th:href="@{./css/bootstrap.css}" />
+<link href="../../css/sh4rewithme/header.css" rel="stylesheet"
+	th:href="@{./css/sh4rewithme/header.css}" />
+<link href="../../css/sh4rewithme/body.css" rel="stylesheet"
+	th:href="@{./css/sh4rewithme/body.css}" />
+<link href="../../css/font-awesome.css" rel="stylesheet"
+	th:href="@{./css/font-awesome.css}" />
 <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
 <!--[if lt IE 9]>
     <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
 <!-- Le fav and touch icons -->
-<link rel="shortcut icon" href="../../images/favicon.ico" th:href="@{./images/favicon.ico}" />
-<link rel="apple-touch-icon" href="../../images/apple-touch-icon.png" th:href="@{./images/apple-touch-icon.png}" />
-<link rel="apple-touch-icon" sizes="72x72" href="../../images/apple-touch-icon-72x72.png" th:href="@{./images/apple-touch-icon-72x72.png}" />
-<link rel="apple-touch-icon" sizes="114x114" href="../../images/apple-touch-icon-114x114.png" th:href="@{./images/apple-touch-icon-114x114.png}" />
+<link rel="shortcut icon" href="../../images/favicon.ico"
+	th:href="@{./images/favicon.ico}" />
+<link rel="apple-touch-icon" href="../../images/apple-touch-icon.png"
+	th:href="@{./images/apple-touch-icon.png}" />
+<link rel="apple-touch-icon" sizes="72x72"
+	href="../../images/apple-touch-icon-72x72.png"
+	th:href="@{./images/apple-touch-icon-72x72.png}" />
+<link rel="apple-touch-icon" sizes="114x114"
+	href="../../images/apple-touch-icon-114x114.png"
+	th:href="@{./images/apple-touch-icon-114x114.png}" />
 </head>
 <body>
 	<div class="navbar navbar-fixed-top">
 		<div class="navbar-inner">
 			<div class="container">
-				<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-				</a>
-				<img src="../../images/Sh4reWithMe.png" th:src="@{./images/Sh4reWithMe.png}" class="header-icon pull-left" />
-				<a class="brand" href="./index.html" th:href="@{./}" th:text="#{app.title}">Sh4reWith.me</a>
+				<a class="btn btn-navbar" data-toggle="collapse"
+					data-target=".nav-collapse"> <span class="icon-bar"></span> <span
+					class="icon-bar"></span> <span class="icon-bar"></span>
+				</a> <img src="../../images/Sh4reWithMe.png"
+					th:src="@{./images/Sh4reWithMe.png}" class="header-icon pull-left" />
+				<a class="brand" href="./index.html" th:href="@{./}"
+					th:text="#{app.title}">Sh4reWith.me</a>
 				<div class="nav-collapse">
 					<ul class="nav">
-						<li class="active"><a href="./userRegistrationForm.html" th:href="@{./login}" th:text="#{login.menu.title}">Login</a></li>
-						<li><a href="./userRegistrationForm.html" th:href="@{./user-registration}" th:text="#{userRegistration.menu.title}">User Registration</a></li>
+						<li class="active"><a href="./userRegistrationForm.html"
+							th:href="@{./login}" th:text="#{login.menu.title}">Login</a></li>
+						<li><a href="./userRegistrationForm.html"
+							th:href="@{./user-registration}"
+							th:text="#{userRegistration.menu.title}">User Registration</a></li>
 					</ul>
 				</div>
 			</div>
@@ -54,24 +68,32 @@ body {
 	<div class="hero-unit main-hero">
 		<div class="container">
 			<h2 th:text="#{login.form.legend}">Login</h2>
-			<div class="alert alert-error" th:if="${loginError}" th:text="#{login.error.text}">Wrong user or password</div>
-			<form class="form-horizontal" method="post" enctype="multipart/form-data" action="#" th:action="@{./j_spring_security_check}">
+			<div class="alert alert-error" th:if="${loginError}"
+				th:text="#{login.error.text}">Wrong user or password</div>
+			<form class="form-horizontal" method="post"
+				enctype="multipart/form-data" action="#"
+				th:action="@{./j_spring_security_check}">
 				<fieldset>
 					<div class="control-group">
-						<label class="control-label" for="j_username" th:text="#{login.form.label.j_username}">User id</label>
+						<label class="control-label" for="j_username"
+							th:text="#{login.form.label.j_username}">User id</label>
 						<div class="controls">
 							<div class="input-prepend">
-								<input type="text" name="j_username" id="j_username" class="xxxlarge" placeholder="userid" th:text="${userId}?:''" />
+								<input type="text" name="j_username" id="j_username"
+									class="xxxlarge" placeholder="userid" th:text="${userId}?:''" />
 							</div>
 						</div>
-						<label class="control-label" for="j_password" th:text="#{login.form.label.j_password}">Password</label>
+						<label class="control-label" for="j_password"
+							th:text="#{login.form.label.j_password}">Password</label>
 						<div class="controls">
 							<div class="input-prepend">
-								<input type="password" name="j_password" id="j_password" class="xxxlarge" placeholder="Password" />
+								<input type="password" name="j_password" id="j_password"
+									class="xxxlarge" placeholder="Password" />
 							</div>
 						</div>
 						<div class="controls">
-							<button type="submit" class="btn btn-primary centered" th:text="#{login.form.submit}">Register</button>
+							<button id="submit_login" type="submit"
+								class="btn btn-primary centered" th:text="#{login.form.submit}">Register</button>
 						</div>
 					</div>
 				</fieldset>
@@ -83,18 +105,31 @@ body {
 ================================================== -->
 	<!-- Placed at the end of the document so the pages load faster -->
 	<script src="../../js/jquery.js" th:src="@{./js/jquery.js}"></script>
-	<script src="../../js/sh4rewithme/login.js" th:src="@{./js/sh4rewithme/login.js}"></script>
-	<script src="../../js/bootstrap-transition.js" th:src="@{./js/bootstrap-transition.js}"></script>
-	<script src="../../js/bootstrap-alert.js" th:src="@{./js/bootstrap-alert.js}"></script>
-	<script src="../../js/bootstrap-modal.js" th:src="@{./js/bootstrap-modal.js}"></script>
-	<script src="../../js/bootstrap-dropdown.js" th:src="@{./js/bootstrap-dropdown.js}"></script>
-	<script src="../../js/bootstrap-scrollspy.js" th:src="@{./js/bootstrap-scrollspy.js}"></script>
-	<script src="../../js/bootstrap-tab.js" th:src="@{./js/bootstrap-tab.js}"></script>
-	<script src="../../js/bootstrap-tooltip.js" th:src="@{./js/bootstrap-tooltip.js}"></script>
-	<script src="../../js/bootstrap-popover.js" th:src="@{./js/bootstrap-popover.js}"></script>
-	<script src="../../js/bootstrap-button.js" th:src="@{./js/bootstrap-button.js}"></script>
-	<script src="../../js/bootstrap-collapse.js" th:src="@{./js/bootstrap-collapse.js}"></script>
-	<script src="../../js/bootstrap-carousel.js" th:src="@{./js/bootstrap-carousel.js}"></script>
-	<script src="../../js/bootstrap-typeahead.js" th:src="@{./js/bootstrap-typeahead.js}"></script>
+	<script src="../../js/sh4rewithme/login.js"
+		th:src="@{./js/sh4rewithme/login.js}"></script>
+	<script src="../../js/bootstrap-transition.js"
+		th:src="@{./js/bootstrap-transition.js}"></script>
+	<script src="../../js/bootstrap-alert.js"
+		th:src="@{./js/bootstrap-alert.js}"></script>
+	<script src="../../js/bootstrap-modal.js"
+		th:src="@{./js/bootstrap-modal.js}"></script>
+	<script src="../../js/bootstrap-dropdown.js"
+		th:src="@{./js/bootstrap-dropdown.js}"></script>
+	<script src="../../js/bootstrap-scrollspy.js"
+		th:src="@{./js/bootstrap-scrollspy.js}"></script>
+	<script src="../../js/bootstrap-tab.js"
+		th:src="@{./js/bootstrap-tab.js}"></script>
+	<script src="../../js/bootstrap-tooltip.js"
+		th:src="@{./js/bootstrap-tooltip.js}"></script>
+	<script src="../../js/bootstrap-popover.js"
+		th:src="@{./js/bootstrap-popover.js}"></script>
+	<script src="../../js/bootstrap-button.js"
+		th:src="@{./js/bootstrap-button.js}"></script>
+	<script src="../../js/bootstrap-collapse.js"
+		th:src="@{./js/bootstrap-collapse.js}"></script>
+	<script src="../../js/bootstrap-carousel.js"
+		th:src="@{./js/bootstrap-carousel.js}"></script>
+	<script src="../../js/bootstrap-typeahead.js"
+		th:src="@{./js/bootstrap-typeahead.js}"></script>
 </body>
 </html>
