@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings>
+   <pluginGroups>
+       <pluginGroup>net.thucydides.maven.plugins</pluginGroup>
+  </pluginGroups>
+
+   <profiles>
+       <profile>
+           <id>personal</id>
+           <activation>
+               <activeByDefault>true</activeByDefault>
+           </activation>
+           <repositories>
+                <repository>
+                    <id>sonatype-oss-releases</id>
+                    <url>https://oss.sonatype.org/content/repositories/releases</url>
+                </repository>
+                <repository>
+                    <id>sonatype-oss-snapshots</id>
+                    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+                </repository>
+            </repositories>
+            <pluginRepositories>
+                <pluginRepository>
+                    <id>sonatype-oss-releases</id>
+                    <url>https://oss.sonatype.org/content/repositories/releases</url>
+                </pluginRepository>
+                <pluginRepository>
+                    <id>sonatype-oss-snapshots</id>
+                    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+                </pluginRepository>
+            </pluginRepositories>
+        </profile>
+    </profiles>
+</settings>
