@@ -1,0 +1,31 @@
+{
+    "queries": [
+        {
+	      "objectName" : "java.lang:type=Memory",
+          "resultAlias": "sh4rewith.me.memory",
+	      "attributes" : [ "HeapMemoryUsage", "NonHeapMemoryUsage" ]
+        },
+        {
+            "comment":"application",
+            "objectName": "sh4rewith.me:name=ApplicationMetrics",
+            "resultAlias": "sh4rewith.me.app",
+            "attributes": [ "NumberOfSharedFiles","NumberOfRegisteredUsers" ]
+        }
+    ], "outputWriters": [
+    {
+        "@class": "org.jmxtrans.embedded.output.Slf4jWriter",
+        "settings": {
+            "enabled": "${jmxtrans.writer.slf4j.enabled:true}"
+        }
+    },
+    {
+        "@class": "org.jmxtrans.embedded.output.GraphiteWriter",
+        "settings": {
+            "host": "${graphite.host:localhost}",
+            "port": "${graphite.port:2003}",
+            "enabled": "${graphite.enabled:true}",
+            "namePrefix": "${graphite.namePrefix:servers.#hostname#.}"
+        }
+    }
+]
+}

@@ -14,6 +14,8 @@ import me.sh4rewith.service.UsersService;
 import me.sh4rewith.utils.DigestUtils;
 import me.sh4rewith.web.forms.UserRegistration;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -25,6 +27,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
 public class UserRegistrationController {
+
+	Logger LOG = LoggerFactory.getLogger(UserRegistrationController.class);
 
 	@Autowired
 	UsersService service;
@@ -63,6 +67,7 @@ public class UserRegistrationController {
 			default:
 				break;
 			}
+			LOG.info("New User : " + userRegistration.getEmail());
 		} else {
 			// HACK because Thymeleaf Spring 3 support doesn't (yet) support
 			// global errors.
@@ -75,6 +80,8 @@ public class UserRegistrationController {
 			userRegistration.setPassword("");
 			userRegistration.setConfirmedPassword("");
 			result = "userRegistrationForm";
+			LOG.warn("Error creating User : " + userRegistration.getEmail()
+			        + ", Messages : " + bindingResult.toString());
 		}
 		return result;
 	}

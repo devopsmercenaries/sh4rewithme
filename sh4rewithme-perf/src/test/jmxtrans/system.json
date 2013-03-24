@@ -1,0 +1,20 @@
+{
+  "servers" : [ {
+    "port" : "@JMX_PORT@",
+    "host" : "@JMX_HOST@",
+    "username" : "@JMX_LOGIN@",
+    "password" : "@JMX_PWD@",
+    "queries" : [ {
+      "outputWriters" : [ {
+        "@class" : "com.googlecode.jmxtrans.model.output.GraphiteWriter",
+        "settings" : {
+          "port" : @GPORT@,
+          "host" : "@GHOST@"
+        }
+      } ],
+      "obj" : "java.lang:type=OperatingSystem",
+      "attr" : [ "SystemLoadAverage", "AvailableProcessors", "TotalPhysicalMemorySize", "FreePhysicalMemorySize", "TotalSwapSpaceSize", "FreeSwapSpaceSize", "OpenFileDescriptorCount", "MaxFileDescriptorCount" ]
+    } ],
+    "numQueryThreads" : 2
+  } ]
+}

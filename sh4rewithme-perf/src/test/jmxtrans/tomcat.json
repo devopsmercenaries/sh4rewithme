@@ -1,0 +1,21 @@
+{
+  "servers" : [ {
+    "port" : "@JMX_PORT@",
+    "host" : "@JMX_HOST@",
+    "username" : "@JMX_LOGIN@",
+    "password" : "@JMX_PWD@",
+    "queries" : [ {
+      "outputWriters" : [ {
+        "@class" : "com.googlecode.jmxtrans.model.output.GraphiteWriter",
+        "settings" : {
+          "port" : @GPORT@,
+          "host" : "@GHOST@"
+        }
+      } ],
+      "obj" : "Catalina:type=ThreadPool,name=*",
+      "resultAlias": "connectors",
+      "attr" : [ "currentThreadCount", "currentThreadsBusy" ]
+    } ],
+    "numQueryThreads" : 2
+  } ]
+}

@@ -43,15 +43,15 @@ public class ApplicationMetrics {
 	}
 
 	@ManagedAttribute(description = "Number of Registered Users")
-	public String getNumberOfRegisteredUsers() {
+	public Long getNumberOfRegisteredUsers() {
 		getStats();
-		return numberOfRegisteredUsers.get().toString();
+		return numberOfRegisteredUsers.get().getValue();
 	}
 
 	@ManagedAttribute(description = "Number of Shared Files")
-	public String getNumberOfSharedFiles() {
+	public Long getNumberOfSharedFiles() {
 		getStats();
-		return numberOfSharedFiles.get().toString();
+		return numberOfSharedFiles.get().getValue();
 	}
 
 	private synchronized void getStats() {
@@ -59,10 +59,8 @@ public class ApplicationMetrics {
 		// if lastUpdate time is inferior to current time - updateRate
 		// Then update the stat from source
 		if (lastUpdate.get().compareTo(date) < 0) {
-			numberOfRegisteredUsers.set(new Stat("NbSharedFiles", repositories
-					.sharedFilesRepository().countAll()));
-			numberOfSharedFiles.set(new Stat("NbRegisteredUsers", repositories
-					.usersRepository().countAll()));
+			numberOfRegisteredUsers.set(new Stat("NbRegisteredUsers", repositories.usersRepository().countAll()));
+			numberOfSharedFiles.set(new Stat("NbSharedFiles", repositories.sharedFilesRepository().countAll()));
 			lastUpdate.set(new Date());
 		}
 	}
