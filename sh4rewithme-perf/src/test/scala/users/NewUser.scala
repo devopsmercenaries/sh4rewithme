@@ -47,7 +47,7 @@ class NewUser extends Simulation {
 	    }
 	}
 	
-	val scn = scenario("Minimal Perf Benchmark")
+	val scn = scenario("NewUser")
 		.repeat(extLoop) {
 			exec(http("request_home")
 						.get(extWebapp)
@@ -66,7 +66,7 @@ class NewUser extends Simulation {
 						.param("lastname", "${username}")
 						.param("password", "${username}")
 						.param("confirmedPassword", "${username}")
-						.check(status.is(302))
+						.check(status.is(200))
 				)
 		}
 
