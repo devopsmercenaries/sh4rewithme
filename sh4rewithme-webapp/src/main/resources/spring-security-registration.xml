@@ -7,6 +7,7 @@
 	<http security="none" pattern="/" />
 	<http security="none" pattern="/user-registration" />
 	<http security="none" pattern="/login" />
+	<http security="none" pattern="/login-failure" />
 	<http security="none" pattern="/user-registration-success" />
 	<http security="none" pattern="/user-registration-confirm/**" />
 	<http security="none" pattern="/css/**" />
@@ -15,7 +16,8 @@
 	<http security="none" pattern="/js/**" />
 	<http auto-config="true">
 		<intercept-url pattern="/**" access="ROLE_USER" />
-		<form-login login-page="/login" authentication-failure-url="/login-failure" default-target-url="/welcome"/>
+		<form-login login-page="/login" authentication-failure-url="/login-failure" 
+			default-target-url="/welcome" />
 	</http>
 	<authentication-manager>
 		<authentication-provider user-service-ref="simpleUserDetailsService">

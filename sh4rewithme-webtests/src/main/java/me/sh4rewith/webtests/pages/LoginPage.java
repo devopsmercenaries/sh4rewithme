@@ -19,20 +19,27 @@ public class LoginPage extends PageObject {
 	@FindBy(id = "submit_login")
 	private WebElement submitButton;
 
+	@FindBy(id = "loginError")
+	private WebElement loginError;
+
 	public LoginPage(WebDriver driver) {
 		super(driver);
 	}
 
 	public void enter_username(String username) {
-		element(usernameField).type(username);
+		typeInto(usernameField, username);
 	}
 
 	public void enter_password(String password) {
-		element(passwordField).type(password);
+		typeInto(passwordField, password);
 	}
 
 	public void submit_login() {
-		element(submitButton).click();
+		clickOn(submitButton);
+	}
+
+	public void login_error_field_displayed() {
+		loginError.isDisplayed();
 	}
 
 }

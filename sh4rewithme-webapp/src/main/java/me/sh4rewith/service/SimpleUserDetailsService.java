@@ -25,7 +25,8 @@ public class SimpleUserDetailsService implements UserDetailsService {
 		UserInfo info = repositories.usersRepository()
 				.getUserInfoById(username);
 		if (info == null) {
-			return null;
+			throw new UsernameNotFoundException("No user found matching "
+					+ username);
 		}
 
 		// FIXME Add support for stored authorities
