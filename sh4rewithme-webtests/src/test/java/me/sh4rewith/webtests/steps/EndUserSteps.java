@@ -1,11 +1,13 @@
 package me.sh4rewith.webtests.steps;
 
 import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
 
 import me.sh4rewith.webtests.pages.LoginPage;
+import me.sh4rewith.webtests.pages.RegistrationPage;
+import me.sh4rewith.webtests.pages.RegistrationSuccessPage;
 import me.sh4rewith.webtests.pages.WelcomePage;
 import net.thucydides.core.annotations.Step;
+import net.thucydides.core.annotations.StepGroup;
 import net.thucydides.core.pages.Pages;
 import net.thucydides.core.steps.ScenarioSteps;
 
@@ -29,18 +31,63 @@ public class EndUserSteps extends ScenarioSteps {
 		loginPage.submit_login();
 	}
 
+	@Step
 	public void should_have_access_to_user_info() {
 		WelcomePage welcomePage = getPages().currentPageAt(WelcomePage.class);
-		welcomePage.user_info_is_available();
+		welcomePage.open();
+		MatcherAssert.assertThat("User info must be available",
+				welcomePage.user_info_is_available());
 	}
 
+	@Step
 	public void should_still_be_on_login_page() {
-		String currentUrl = getDriver().getCurrentUrl();
-		MatcherAssert.assertThat(currentUrl,
-				Matchers.endsWith("/login"));
+		getPages().isCurrentPageAt(LoginPage.class);
 	}
 
+	@Step
 	public void should_see_an_error_message() {
-		
+		LoginPage loginPage = getPages().currentPageAt(LoginPage.class);
+		loginPage.login_error_field_displayed();
 	}
+
+	@Step
+	public void registersAs(String userId, String email, String firstName,
+			String lastName, String password) {
+		RegistrationPage registrationPage = getPages().currentPageAt(
+				RegistrationPage.class);
+		registrationPage.open();
+		registrationPage.enter_userid(userId);
+		registrationPage.enter_email(email);
+		registrationPage.enter_firstname(firstName);
+		registrationPage.enter_lastname(lastName);
+		registrationPage.enter_password(password);
+		registrationPage.enter_confirmed_password(password);
+		registrationPage.submit_registration();
+	}
+
+	@Step
+	public void should_land_on_registration_success() {
+		getPages().isCurrentPageAt(RegistrationSuccessPage.class);
+	}
+
+	@StepGroup
+	public void should_not_be_able_to_login(String userId, String password) {
+		logs_in_with(userId, password);
+		should_still_be_on_login_page();
+		should_see_an_error_message();
+	}
+
+	@StepGroup
+	public void should_be_able_to_login(String userId, String password) {
+		logs_in_with(userId, password);
+		should_have_access_to_user_info();
+	}
+
+	@Step
+	public void clicks_on_confirmation_link() {
+		RegistrationSuccessPage registrationSuccessPage = getPages()
+				.currentPageAt(RegistrationSuccessPage.class);
+		registrationSuccessPage.click_on_confirmation_link();
+	}
+
 }
