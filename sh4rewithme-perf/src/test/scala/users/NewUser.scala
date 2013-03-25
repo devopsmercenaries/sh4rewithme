@@ -47,7 +47,33 @@ class NewUser extends Simulation {
 	    }
 	}
 	
-	val scn = scenario("NewUser")
+	val scnLoadFile = scenario("Scenario Load Files")
+		.exec(http("request_login")
+					.post("/sh4rewithme-webapp/j_spring_security_check")
+					.param("username", "gatling")
+					.param("password", "gatling")
+					.headers(headers)
+			)
+		.pause(4)
+		.exec(http("request_upload_page")
+					.get("/sh4rewithme-webapp/upload")
+					.headers(headers)
+			)
+		.exec(http("request_upload")
+					.post("/sh4rewithme-webapp/upload")
+					//Post content
+					//File name
+					//Check uploaded file exists
+					.headers(headers)
+			)
+		.pause(156 milliseconds)
+		.exec(http("request_shared-files")
+					.get("/sh4rewithme-webapp/shared-files")
+					.headers(headers)
+					//Check uploaded file exists
+			)
+	
+	val scnNewUser = scenario("NewUser")
 		.repeat(extLoop) {
 			exec(http("request_home")
 						.get(extWebapp)
@@ -66,9 +92,22 @@ class NewUser extends Simulation {
 						.param("lastname", "${username}")
 						.param("password", "${username}")
 						.param("confirmedPassword", "${username}")
+						.headers(headers)
 						.check(status.is(200))
 				)
 		}
 
-	setUp(scn.users(1).protocolConfig(httpConf))
+	val scnHomePage = scenario("Home Page")
+		.repeat(extLoop) {
+		exec(
+			http("HomePage")
+				.get(extWebapp)
+				.headers(headers)
+				.check(status.is(200)))
+		}
+		
+
+	//setUp(scnHomePage.users(extUsers).protocolConfig(httpConf))
+	setUp(scnNewUser.users(extUsers).protocolConfig(httpConf))
+	//setUp(scnLoadFile.users(extUsers).protocolConfig(httpConf))
 }
