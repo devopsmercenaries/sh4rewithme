@@ -12,8 +12,8 @@ class BasicPerfSimulation extends Simulation {
 	val extHost = Option(System.getProperty("extHost")).getOrElse("localhost")
 	val extPort = Integer.getInteger("extPort", 9090)
 	val extUsers = Integer.getInteger("extUsers", 1)
-	val extRampup = Integer.getInteger("extRampup", 0).toLong
-	val extPause = Integer.getInteger("extPause", 1).toLong
+	val extRampup = java.lang.Long.getLong("extRampup", 0L)
+	val extPause = java.lang.Long.getLong("extPause", 1L)
 	val extLoop = Integer.getInteger("extLoop", 100)
 
 	val extBaseUrl = if (extPort == 443)
