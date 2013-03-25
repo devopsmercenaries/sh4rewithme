@@ -10,12 +10,9 @@
 	<modules>
 		<module>../sh4rewithme-webapp</module>
 		<module>../sh4rewithme-assembly</module>
-<!--
-                <module>../sh4rewithme-webtests</module>
-                <module>../sh4rewithme-perf</module>
--->
-        </modules>
-        
+		<!-- <module>../sh4rewithme-webtests</module> <module>../sh4rewithme-perf</module> -->
+	</modules>
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<spring.release.version>3.1.1.RELEASE</spring.release.version>
@@ -205,6 +202,17 @@
 				<artifactId>elasticsearch</artifactId>
 				<version>0.20.5</version>
 			</dependency>
+			<dependency>
+				<groupId>org.jmxtrans.embedded</groupId>
+				<artifactId>embedded-jmxtrans</artifactId>
+				<version>1.0.4</version>
+			</dependency>
+<!-- 			<dependency> -->
+<!-- 				jython required by the GraphitePickleWriter -->
+<!-- 				<groupId>org.python</groupId> -->
+<!-- 				<artifactId>jython</artifactId> -->
+<!-- 				<version>2.5.3</version> -->
+<!-- 			</dependency> -->
 		</dependencies>
 	</dependencyManagement>
 	<build>

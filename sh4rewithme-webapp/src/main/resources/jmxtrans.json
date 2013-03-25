@@ -1,0 +1,43 @@
+{
+    "queries": [
+        {
+            "comment":"application",
+            "objectName": "sh4rewith.me:name=ApplicationMetrics",
+            "resultAlias": "sh4rewith.me.app",
+            "attributes": [ "NumberOfSharedFiles","NumberOfRegisteredUsers" ]
+        },
+        {
+	      "objectName" : "java.lang:type=Memory",
+          "resultAlias": "sh4rewith.me.memory",
+	      "attributes" : [ "HeapMemoryUsage", "NonHeapMemoryUsage" ]
+        },
+        {
+          "comment":"tomcat7",
+	      "objectName" : "Catalina:type=ThreadPool,name=*",
+	      "resultAlias": "connectors",
+	      "attributes" : [ "currentThreadCount", "currentThreadsBusy" ]
+        }, 
+        {
+            "comment":"system",
+      		"objectName" : "java.lang:type=OperatingSystem",
+            "resultAlias": "sh4rewith.me.system",
+      		"attributes" : [ "SystemLoadAverage", "AvailableProcessors", "TotalPhysicalMemorySize", "FreePhysicalMemorySize", "TotalSwapSpaceSize", "FreeSwapSpaceSize", "OpenFileDescriptorCount", "MaxFileDescriptorCount" ]  
+        }
+    ], "outputWriters": [
+    {
+        "@class": "org.jmxtrans.embedded.output.Slf4jWriter",
+        "settings": {
+            "enabled": "${jmxtrans.writer.slf4j.enabled:true}"
+        }
+    },
+    {
+        "@class": "org.jmxtrans.embedded.output.GraphiteWriter",
+        "settings": {
+            "host": "${graphite.host:localhost}",
+            "port": "${graphite.port:2003}",
+            "enabled": "${graphite.enabled:true}",
+            "namePrefix": "${graphite.namePrefix:servers.#hostname#.}"
+        }
+    }
+]
+}

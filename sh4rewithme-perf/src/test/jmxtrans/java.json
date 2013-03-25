@@ -1,0 +1,41 @@
+{
+  "servers" : [ {
+    "port" : "@JMX_PORT@",
+    "host" : "@JMX_HOST@",
+    "username" : "@JMX_LOGIN@",
+    "password" : "@JMX_PWD@",
+    "queries" : [ {
+      "outputWriters" : [ {
+        "@class" : "com.googlecode.jmxtrans.model.output.GraphiteWriter",
+        "settings" : {
+          "port" : @GPORT@,
+          "host" : "@GHOST@"
+        }
+      } ],
+      "obj" : "java.lang:type=Memory",
+      "attr" : [ "HeapMemoryUsage", "NonHeapMemoryUsage" ]
+    }, {
+      "outputWriters" : [ {
+        "@class" : "com.googlecode.jmxtrans.model.output.GraphiteWriter",
+        "settings" : {
+          "port" : @GPORT@,
+          "host" : "@GHOST@"
+        }
+      } ],
+      "obj" : "java.lang:name=CMS Old Gen,type=MemoryPool",
+      "attr" : [ "Usage" ]
+    }, {
+      "outputWriters" : [ {
+        "@class" : "com.googlecode.jmxtrans.model.output.GraphiteWriter",
+        "settings" : {
+          "port" : @GPORT@,
+          "host" : "@GHOST@",
+          "typeNames" : [ "name" ]
+        }
+      } ],
+      "obj" : "java.lang:type=GarbageCollector,name=*",
+      "attr" : [ "CollectionCount", "CollectionTime" ]
+    } ],
+    "numQueryThreads" : 2
+  } ]
+}

@@ -1,0 +1,158 @@
+{
+  "servers" : [ {
+    "port" : "@JMX_PORT@",
+    "host" : "@JMX_HOST@",
+    "username" : "@JMX_LOGIN@",
+    "password" : "@JMX_PWD@",
+    "queries" : [ {
+      "outputWriters" : [ {
+        "@class" : "com.googlecode.jmxtrans.model.output.GraphiteWriter",
+        "settings" : {
+          "port" : @GPORT@,
+          "host" : "@GHOST@"
+        }
+      } ],      
+      "resultAlias": "courtanet.auto.orchestrator",
+      "obj" : "courtanet:module=auto,name=orchestrator",
+      "attr" : [  "MiseEnRelationError", "MiseEnRelationErrorPartner", "MiseEnRelationSuccess", "MiseEnRelationTimeOver", "QueueSize", "TarificationError", "TarificationErrorPartner", "TarificationExclusion", "TarificationNew", "TarificationRefus", "TarificationSuccess", "TarificationTimeOver" ]
+    },
+    {
+      "outputWriters" : [ {
+        "@class" : "com.googlecode.jmxtrans.model.output.GraphiteWriter",
+        "settings" : {
+          "port" : @GPORT@,
+          "host" : "@GHOST@"
+        }
+      } ],      
+      "resultAlias": "courtanet.auto.backoffice",
+      "obj" : "courtanet:module=auto,name=backoffice",
+      "attr" : [  "MiseEnRelation", "MiseEnRelationPerMin", "TarifsVus", "TarifsVusPerMin" ]
+    },
+     
+    {
+      "outputWriters" : [ {
+        "@class" : "com.googlecode.jmxtrans.model.output.GraphiteWriter",
+        "settings" : {
+          "port" : @GPORT@,
+          "host" : "@GHOST@"
+        }
+      } ],      
+      "resultAlias": "courtanet.emprunteur.orchestrator",
+      "obj" : "courtanet:module=emprunteur,name=orchestrator",
+      "attr" : [  "MiseEnRelationError", "MiseEnRelationErrorPartner", "MiseEnRelationSuccess", "MiseEnRelationTimeOver", "QueueSize", "TarificationError", "TarificationErrorPartner", "TarificationExclusion", "TarificationNew", "TarificationRefus", "TarificationSuccess", "TarificationTimeOver" ]
+    },
+    {
+      "outputWriters" : [ {
+        "@class" : "com.googlecode.jmxtrans.model.output.GraphiteWriter",
+        "settings" : {
+          "port" : @GPORT@,
+          "host" : "@GHOST@"
+        }
+      } ],      
+      "resultAlias": "courtanet.emprunteur.backoffice",
+      "obj" : "courtanet:module=emprunteur,name=backoffice",
+      "attr" : [  "MiseEnRelation", "MiseEnRelationPerMin", "TarifsVus", "TarifsVusPerMin" ]
+    },
+
+    {
+      "outputWriters" : [ {
+        "@class" : "com.googlecode.jmxtrans.model.output.GraphiteWriter",
+        "settings" : {
+          "port" : @GPORT@,
+          "host" : "@GHOST@"
+        }
+      } ],      
+      "resultAlias": "courtanet.mrh.orchestrator",
+      "obj" : "courtanet:module=mrh,name=orchestrator",
+      "attr" : [  "MiseEnRelationError", "MiseEnRelationErrorPartner", "MiseEnRelationSuccess", "MiseEnRelationTimeOver", "QueueSize", "TarificationError", "TarificationErrorPartner", "TarificationExclusion", "TarificationNew", "TarificationRefus", "TarificationSuccess", "TarificationTimeOver" ]
+    },
+    {
+      "outputWriters" : [ {
+        "@class" : "com.googlecode.jmxtrans.model.output.GraphiteWriter",
+        "settings" : {
+          "port" : @GPORT@,
+          "host" : "@GHOST@"
+        }
+      } ],      
+      "resultAlias": "courtanet.mrh.backoffice",
+      "obj" : "courtanet:module=mrh,name=backoffice",
+      "attr" : [  "MiseEnRelation", "MiseEnRelationPerMin", "TarifsVus", "TarifsVusPerMin" ]
+    },
+
+    {
+      "outputWriters" : [ {
+        "@class" : "com.googlecode.jmxtrans.model.output.GraphiteWriter",
+        "settings" : {
+          "port" : @GPORT@,
+          "host" : "@GHOST@"
+        }
+      } ],      
+      "resultAlias": "courtanet.moto.orchestrator",
+      "obj" : "courtanet:module=moto,name=orchestrator",
+      "attr" : [  "MiseEnRelationError", "MiseEnRelationErrorPartner", "MiseEnRelationSuccess", "MiseEnRelationTimeOver", "QueueSize", "TarificationError", "TarificationErrorPartner", "TarificationExclusion", "TarificationNew", "TarificationRefus", "TarificationSuccess", "TarificationTimeOver" ]
+    },
+    {
+      "outputWriters" : [ {
+        "@class" : "com.googlecode.jmxtrans.model.output.GraphiteWriter",
+        "settings" : {
+          "port" : @GPORT@,
+          "host" : "@GHOST@"
+        }
+      } ],      
+      "resultAlias": "courtanet.moto.backoffice",
+      "obj" : "courtanet:module=moto,name=backoffice",
+      "attr" : [  "MiseEnRelation", "MiseEnRelationPerMin", "TarifsVus", "TarifsVusPerMin" ]
+    },
+
+    {
+    "outputWriters" : [ {
+        "@class" : "com.googlecode.jmxtrans.model.output.GraphiteWriter",
+        "settings" : {
+          "port" : @GPORT@,
+          "host" : "@GHOST@"
+        }
+      } ],      
+      "resultAlias": "courtanet.sante.orchestrator",
+      "obj" : "courtanet:module=sante,name=orchestrator",
+      "attr" : [  "MiseEnRelationError", "MiseEnRelationErrorPartner", "MiseEnRelationSuccess", "MiseEnRelationTimeOver", "QueueSize", "TarificationError", "TarificationErrorPartner", "TarificationExclusion", "TarificationNew", "TarificationRefus", "TarificationSuccess", "TarificationTimeOver" ]
+    }, 
+    {
+      "outputWriters" : [ {
+        "@class" : "com.googlecode.jmxtrans.model.output.GraphiteWriter",
+        "settings" : {
+          "port" : @GPORT@,
+          "host" : "graphite.lt.courtanet.net"
+        }
+      } ],      
+      "resultAlias": "courtanet.sante.backoffice",
+      "obj" : "courtanet:module=sante,name=backoffice",
+      "attr" : [  "MiseEnRelation", "MiseEnRelationPerMin", "TarifsVus", "TarifsVusPerMin" ]
+    },
+
+    {
+    "outputWriters" : [ {
+        "@class" : "com.googlecode.jmxtrans.model.output.GraphiteWriter",
+        "settings" : {
+          "port" : @GPORT@,
+          "host" : "@GHOST@"
+        }
+      } ],      
+      "resultAlias": "courtanet.tunnel",
+      "obj" : "courtanet:name=tunnel",
+      "attr" : [  "NbActiveHttpSession_RO", "TotalHttpSession_RO" ]
+    },
+    {
+    "outputWriters" : [ {
+        "@class" : "com.googlecode.jmxtrans.model.output.GraphiteWriter",
+        "settings" : {
+          "port" : @GPORT@,
+          "host" : "@GHOST@"
+        }
+      } ],      
+      "resultAlias": "courtanet.datasource",
+      "obj" : "courtanet:name=connections,type=datasource",
+      "attr" : [  "NombreConnections" ]
+    } ],
+    "numQueryThreads" : 2
+  } ]
+}
