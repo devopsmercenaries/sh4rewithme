@@ -16,7 +16,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 public class UserRegistration {
 	@NotNull
 	@NotEmpty
-	@Size(min = 5, max = 20)
+	@Size(min = 5, max = 30)
 	private String id;
 	@NotNull
 	@NotEmpty
