@@ -51,8 +51,8 @@
                     <excludes>
                         <exclude>advanced/*.scala</exclude>
                     </excludes>
-                    <simulation>users.NewUser</simulation>
-                    <!-- <simulation>basic.BasicPerfSimulation</simulation> -->
+                    <simulationClass>users.NewUser</simulationClass>
+                    <!-- <simulationClass>basic.BasicPerfSimulation</simulationClass> -->
                     <jvmArgs>
                         <jvmArg>-DextHost=${simulation.host}</jvmArg>
                         <jvmArg>-DextPort=${simulation.port}</jvmArg>
