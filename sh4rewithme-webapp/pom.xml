@@ -115,22 +115,11 @@
 			<artifactId>elasticsearch</artifactId>
 		</dependency>
 		<dependency>
-		    <groupId>org.jmxtrans.embedded</groupId>
-		    <artifactId>embedded-jmxtrans</artifactId>
+			<groupId>org.jmxtrans.embedded</groupId>
+			<artifactId>embedded-jmxtrans</artifactId>
 		</dependency>
 	</dependencies>
 	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.tomcat.maven</groupId>
-				<artifactId>tomcat7-maven-plugin</artifactId>
-				<configuration>
-					<systemProperties>
-						<spring.profiles.active>embedded-elasticsearch,registration-security,init-elasticsearch,jmxtrans</spring.profiles.active>
-					</systemProperties>
-				</configuration>
-			</plugin>
-		</plugins>
 		<resources>
 			<!-- Filtering application.properties to add current app version. -->
 			<resource>
@@ -140,6 +129,7 @@
 					<include>application.properties</include>
 				</includes>
 			</resource>
+			<!-- Not filtering all the rest. -->
 			<resource>
 				<directory>src/main/resources</directory>
 				<filtering>false</filtering>
@@ -149,4 +139,41 @@
 			</resource>
 		</resources>
 	</build>
+	<profiles>
+		<profile>
+			<id>demo</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.tomcat.maven</groupId>
+						<artifactId>tomcat7-maven-plugin</artifactId>
+						<configuration>
+							<systemProperties>
+								<spring.profiles.active>embedded-elasticsearch,registration-security,init-elasticsearch</spring.profiles.active>
+							</systemProperties>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>qual</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.tomcat.maven</groupId>
+						<artifactId>tomcat7-maven-plugin</artifactId>
+						<configuration>
+							<systemProperties>
+								<spring.profiles.active>embedded-elasticsearch,registration-security,init-elasticsearch,jmxtrans</spring.profiles.active>
+							</systemProperties>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>
