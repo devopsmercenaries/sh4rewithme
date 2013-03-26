@@ -4,7 +4,7 @@ How to try it out quickly
 ========================================
 From this repository's root, launch:
 ######
-    mvn install tomcat7:run 
+    mvn install tomcat7:run -pl sh4rewithme-webapp
 
 When the Tomcat server finishes starting, go to <a href="http://localhost:9090/sh4rewithme-webapp">http://localhost:9090/sh4rewithme-webapp/</a>
 Use "zeus" login with the same as password. 
@@ -26,12 +26,11 @@ How to launch webtests
 For the moment:
 First start the webapp in a given console.
 ######
-    mvn install tomcat7:run 
+    mvn install tomcat7:run -pl sh4rewithme-webapp
 
 Then run integration tests:
 ######
-    cd sh4rewithme-webtests
-    mvn integration-test thucydides:aggregate 
+    mvn integration-test thucydides:aggregate -f sh4rewithme-webtests/pom.xml
 
 Tests results report will be available in:
 ######
@@ -44,9 +43,9 @@ First start the webapp in a given console.
 ######
     mvn install tomcat7:run -pl sh4rewithme-webapp
 
+Then configure a graphite instance somewhere to monitor the test.
 Then run performance tests:
 ######
-    cd sh4rewithme-perf
-    mvn install sh4rewithme-perf
+    mvn install -P qual -f sh4rewithme-perf/pom.xml
 
 Tests results report will be available in target/gatling/results/
