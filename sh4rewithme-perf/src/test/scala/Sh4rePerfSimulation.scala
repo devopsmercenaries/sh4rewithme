@@ -1,4 +1,3 @@
-package me.sh4re.perf
 
 import com.excilys.ebi.gatling.core.Predef._
 import com.excilys.ebi.gatling.http.Predef._
@@ -48,30 +47,36 @@ class Sh4rePerfSimulation extends Simulation {
 	}
 	
 	val scnLoadFile = scenario("Scenario Load Files")
-		.exec(http("request_login")
-					.post("/sh4rewithme-webapp/j_spring_security_check")
-					.param("username", "gatling")
-					.param("password", "gatling")
-					.headers(headers)
-			)
-		.pause(4)
-		.exec(http("request_upload_page")
-					.get("/sh4rewithme-webapp/upload")
-					.headers(headers)
-			)
-		.exec(http("request_upload")
-					.post("/sh4rewithme-webapp/upload")
-					//Post content
-					//File name
-					//Check uploaded file exists
-					.headers(headers)
-			)
-		.pause(156 milliseconds)
-		.exec(http("request_shared-files")
-					.get("/sh4rewithme-webapp/shared-files")
-					.headers(headers)
-					//Check uploaded file exists
-			)
+		.repeat(extLoop) {
+			exec(http("request_login")
+						.post("/sh4rewithme-webapp/j_spring_security_check")
+						.param("j_username", "gatling")
+						.param("j_password", "gatling")
+						.headers(headers)
+						.check(status.is(302))
+				)
+			.pause(10 milliseconds)
+			.exec(http("request_upload_page")
+						.get("/sh4rewithme-webapp/upload")
+						.headers(headers)
+						.check(status.is(200))
+				)
+			.exec(http("request_upload")
+						.post("/sh4rewithme-webapp/upload")
+	  					.param("description", "upload" + scala.math.abs(java.util.UUID.randomUUID.getMostSignificantBits))
+	  					.param("expiration", "1" )
+	  					.upload("file", "myAttachment.txt")
+	  					.headers(headers)
+						.check(status.is(302))
+				)
+			.pause(10 milliseconds)
+			.exec(http("request_shared-files")
+						.get("/sh4rewithme-webapp/shared-files")
+						.headers(headers)
+						.check(status.is(200))
+						//Check uploaded file exists
+				)
+		}
 	
 	val scnNewUser = scenario("NewUser")
 		.repeat(extLoop) {
@@ -108,6 +113,6 @@ class Sh4rePerfSimulation extends Simulation {
 		
 
 	//setUp(scnHomePage.users(extUsers).protocolConfig(httpConf))
-	setUp(scnNewUser.users(extUsers).protocolConfig(httpConf))
-	//setUp(scnLoadFile.users(extUsers).protocolConfig(httpConf))
+	//setUp(scnNewUser.users(extUsers).protocolConfig(httpConf))
+	setUp(scnLoadFile.users(extUsers).protocolConfig(httpConf))
 }

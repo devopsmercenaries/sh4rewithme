@@ -14,39 +14,45 @@ import me.sh4rewith.service.SharedFilesService;
 import me.sh4rewith.utils.DigestUtils;
 import me.sh4rewith.web.forms.ToBeSharedFile;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @RequestMapping("/upload")
 public class UploadController {
+
+	Logger LOG = LoggerFactory.getLogger(UploadController.class);
 
 	@Autowired
 	SharedFilesService service;
 
 	@RequestMapping(method = RequestMethod.POST)
 	public String storeFile(ToBeSharedFile toBeSharedFile) throws IOException {
-		final String rawFileInfoId = DigestUtils.md5Hash(toBeSharedFile
-				.getFile().getContentType().getBytes(), toBeSharedFile
-				.getFile().getOriginalFilename().getBytes());
-		final String rawFileId = DigestUtils.md5Hash(toBeSharedFile.getFile()
+		MultipartFile file = toBeSharedFile.getFile();
+		final String rawFileInfoId = DigestUtils.md5Hash(file.getContentType().getBytes(), file.getOriginalFilename().getBytes());
+		final String rawFileId = DigestUtils.md5Hash(file
 				.getBytes(), rawFileInfoId.getBytes());
 		final StorageCoordinates coordinates = service.storeFile(
 				StorageType.FILESYSTEM,
-				toBeSharedFile.getFile().getBytes());
+				file.getBytes());
 		RawFileInfo rawFileInfo = new RawFileInfo.Builder()
 				.setId(rawFileId + "-info")
-				.setContentType(toBeSharedFile.getFile().getContentType())
-				.setSize(toBeSharedFile.getFile().getSize())
+				.setContentType(file.getContentType())
+				.setSize(file.getSize())
 				.setOriginalFileName(
-						toBeSharedFile.getFile().getOriginalFilename())
+						file.getOriginalFilename())
 				.setRawFileId(rawFileId).build();
 		RawFile rawFile = new RawFile.Builder().setId(rawFileId)
 				.setStorageCoordinates(coordinates).build();
+		String owner = SecurityContextHolder.getContext().getAuthentication()
+		        .getName();
 		SharedFileInfo sharedFileInfo = new SharedFileInfo.Builder()
 				.setDescription(toBeSharedFile.getDescription())
 				.setCreationDate(new Date())
@@ -54,13 +60,13 @@ public class UploadController {
 						new Date(new Date().getTime()
 								+ (TimeUnit.MINUTES.toMillis(toBeSharedFile
 										.getExpiration()))))
-				.setOwner(
-						SecurityContextHolder.getContext().getAuthentication()
-								.getName()).build();
+.setOwner(owner)
+		        .build();
 		SharedFile sharedFile = new SharedFile.Builder().setRawFile(rawFile)
 				.setRawFileInfo(rawFileInfo).setSharedFileInfo(sharedFileInfo)
 				.build();
 		service.store(sharedFile);
+		LOG.info("New File for " + owner + " : " + file.getOriginalFilename());
 		return "redirect:shared-files";
 	}
 
