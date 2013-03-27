@@ -20,7 +20,7 @@
         <simulation.pause>1</simulation.pause>
         <simulation.port>${http.port}</simulation.port>
         <simulation.users>100</simulation.users>
-        <simulation.loops>10000</simulation.loops>
+        <simulation.loops>2000</simulation.loops>
     </properties>
 
     <dependencies>

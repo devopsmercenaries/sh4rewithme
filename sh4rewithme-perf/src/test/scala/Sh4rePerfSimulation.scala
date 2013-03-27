@@ -1,4 +1,4 @@
-package users
+package me.sh4re.perf
 
 import com.excilys.ebi.gatling.core.Predef._
 import com.excilys.ebi.gatling.http.Predef._
@@ -8,7 +8,7 @@ import akka.util.duration._
 import bootstrap._
 import assertions._
 
-class NewUser extends Simulation {
+class Sh4rePerfSimulation extends Simulation {
 
 	val extHost = Option(System.getProperty("extHost")).getOrElse("localhost")
 	val extPort = Integer.getInteger("extPort", 9090)
