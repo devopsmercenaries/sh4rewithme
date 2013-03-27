@@ -1,6 +1,5 @@
 package me.sh4rewith.persistence.elasticsearch;
 
-import static me.sh4rewith.persistence.keys.SharedFileInfoKeys.PRIVACY_TYPE;
 import static me.sh4rewith.persistence.keys.UserInfoKeys.CREDENTIALS;
 import static me.sh4rewith.persistence.keys.UserInfoKeys.EMAIL;
 import static me.sh4rewith.persistence.keys.UserInfoKeys.FIRST_NAME;

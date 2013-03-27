@@ -13,6 +13,7 @@ public class Application {
     @Feature
     public class FileManagement {
     	public class FileUpload {}
+    	public class FileDownload {}
     }
 
 }

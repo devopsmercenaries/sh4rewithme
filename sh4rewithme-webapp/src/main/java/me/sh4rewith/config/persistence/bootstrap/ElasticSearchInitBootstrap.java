@@ -11,7 +11,6 @@ import me.sh4rewith.persistence.mongo.mappers.SharedFileInfoMapper;
 
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsResponse;
 import org.elasticsearch.client.AdminClient;
-import org.elasticsearch.client.Client;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -31,8 +30,6 @@ public class ElasticSearchInitBootstrap extends AbstractInitBootstrap {
 		return usersRepository;
 	}
 
-	@Autowired
-	private Client esClient;
 	@Autowired
 	private AdminClient esAdminClient;
 

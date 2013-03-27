@@ -40,7 +40,7 @@ public class UploadController {
 		final String rawFileId = DigestUtils.md5Hash(file
 				.getBytes(), rawFileInfoId.getBytes());
 		final StorageCoordinates coordinates = service.storeFile(
-				StorageType.FILESYSTEM,
+				StorageType.ELASTICSEARCH,
 				file.getBytes());
 		RawFileInfo rawFileInfo = new RawFileInfo.Builder()
 				.setId(rawFileId + "-info")
@@ -52,7 +52,7 @@ public class UploadController {
 		RawFile rawFile = new RawFile.Builder().setId(rawFileId)
 				.setStorageCoordinates(coordinates).build();
 		String owner = SecurityContextHolder.getContext().getAuthentication()
-		        .getName();
+				.getName();
 		SharedFileInfo sharedFileInfo = new SharedFileInfo.Builder()
 				.setDescription(toBeSharedFile.getDescription())
 				.setCreationDate(new Date())
@@ -60,8 +60,8 @@ public class UploadController {
 						new Date(new Date().getTime()
 								+ (TimeUnit.MINUTES.toMillis(toBeSharedFile
 										.getExpiration()))))
-.setOwner(owner)
-		        .build();
+				.setOwner(owner)
+				.build();
 		SharedFile sharedFile = new SharedFile.Builder().setRawFile(rawFile)
 				.setRawFileInfo(rawFileInfo).setSharedFileInfo(sharedFileInfo)
 				.build();
