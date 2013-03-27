@@ -19,8 +19,8 @@
         <simulation.rampup>1</simulation.rampup>
         <simulation.pause>1</simulation.pause>
         <simulation.port>${http.port}</simulation.port>
-        <simulation.users>100</simulation.users>
-        <simulation.loops>10000</simulation.loops>
+        <simulation.users>1</simulation.users>
+        <simulation.loops>100</simulation.loops>
     </properties>
 
     <dependencies>
@@ -42,7 +42,7 @@
                     <!-- Default values -->
                     <configDir>src/test/resources</configDir>
                     <dataFolder>src/test/resources/data</dataFolder>
-                    <resultsFolder>../target/gatling/results</resultsFolder>
+                    <resultsFolder>${project.build.directory}/gatling/results</resultsFolder>
                     <requestBodiesFolder>src/test/resources/request-bodies</requestBodiesFolder>
                     <simulationsFolder>src/test/scala</simulationsFolder>
                     <includes>
@@ -51,7 +51,7 @@
                     <excludes>
                         <exclude>advanced/*.scala</exclude>
                     </excludes>
-                    <simulationClass>users.NewUser</simulationClass>
+<!--                     <simulationClass>Sh4rePerfSimulation</simulationClass> -->
                     <!-- <simulationClass>basic.BasicPerfSimulation</simulationClass> -->
                     <jvmArgs>
                         <jvmArg>-DextHost=${simulation.host}</jvmArg>
