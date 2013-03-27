@@ -1,4 +1,3 @@
-package users
 
 import com.excilys.ebi.gatling.core.Predef._
 import com.excilys.ebi.gatling.http.Predef._
@@ -8,7 +7,7 @@ import akka.util.duration._
 import bootstrap._
 import assertions._
 
-class NewUser extends Simulation {
+class Sh4rePerfSimulation extends Simulation {
 
 	val extHost = Option(System.getProperty("extHost")).getOrElse("localhost")
 	val extPort = Integer.getInteger("extPort", 9090)
@@ -47,7 +46,39 @@ class NewUser extends Simulation {
 	    }
 	}
 	
-	val scn = scenario("NewUser")
+	val scnLoadFile = scenario("Scenario Load Files")
+		.repeat(extLoop) {
+			exec(http("request_login")
+						.post("/sh4rewithme-webapp/j_spring_security_check")
+						.param("j_username", "gatling")
+						.param("j_password", "gatling")
+						.headers(headers)
+						.check(status.is(302))
+				)
+			.pause(10 milliseconds)
+			.exec(http("request_upload_page")
+						.get("/sh4rewithme-webapp/upload")
+						.headers(headers)
+						.check(status.is(200))
+				)
+			.exec(http("request_upload")
+						.post("/sh4rewithme-webapp/upload")
+	  					.param("description", "upload" + scala.math.abs(java.util.UUID.randomUUID.getMostSignificantBits))
+	  					.param("expiration", "1" )
+	  					.upload("file", "myAttachment.txt")
+	  					.headers(headers)
+						.check(status.is(302))
+				)
+			.pause(10 milliseconds)
+			.exec(http("request_shared-files")
+						.get("/sh4rewithme-webapp/shared-files")
+						.headers(headers)
+						.check(status.is(200))
+						//Check uploaded file exists
+				)
+		}
+	
+	val scnNewUser = scenario("NewUser")
 		.repeat(extLoop) {
 			exec(http("request_home")
 						.get(extWebapp)
@@ -66,9 +97,22 @@ class NewUser extends Simulation {
 						.param("lastname", "${username}")
 						.param("password", "${username}")
 						.param("confirmedPassword", "${username}")
+						.headers(headers)
 						.check(status.is(200))
 				)
 		}
 
-	setUp(scn.users(1).protocolConfig(httpConf))
+	val scnHomePage = scenario("Home Page")
+		.repeat(extLoop) {
+		exec(
+			http("HomePage")
+				.get(extWebapp)
+				.headers(headers)
+				.check(status.is(200)))
+		}
+		
+
+	//setUp(scnHomePage.users(extUsers).protocolConfig(httpConf))
+	//setUp(scnNewUser.users(extUsers).protocolConfig(httpConf))
+	setUp(scnLoadFile.users(extUsers).protocolConfig(httpConf))
 }
