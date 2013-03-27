@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 
+import fr.pilato.spring.elasticsearch.ElasticsearchClientFactoryBean;
 import fr.pilato.spring.elasticsearch.ElasticsearchNodeFactoryBean;
 
 @Configuration
@@ -29,12 +30,17 @@ public class ElasticSearchEmbeddedConfig {
 
 	@Bean
 	public Client elasticSearchClient() throws Exception {
-		return elasticSearchNode().client();
+		ElasticsearchClientFactoryBean elasticsearchClientFactoryBean = new ElasticsearchClientFactoryBean();
+		elasticsearchClientFactoryBean.setNode(elasticSearchNode());
+		// Ajouter des mappings pour les types à supprimer.
+		// elasticsearchClientFactoryBean.setForceMapping(true);
+		elasticsearchClientFactoryBean.afterPropertiesSet();
+		return elasticsearchClientFactoryBean.getObject();
 	}
 
 	@Bean
 	public AdminClient elasticSearchAdminClient() throws Exception {
-		return elasticSearchNode().client().admin();
+		return elasticSearchClient().admin();
 	}
 
 }

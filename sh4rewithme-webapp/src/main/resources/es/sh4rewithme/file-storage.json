@@ -1,0 +1,7 @@
+{
+  "file-storage" : {
+    "properties" : {
+      "bytes" : {"type" : "binary"}
+    }
+  }
+}

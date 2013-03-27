@@ -22,4 +22,10 @@ public class SharedFilesPage extends PageObject {
 						&& element.containsText(description));
 	}
 
+	public void downloads_file_from_private_stream(String description) {
+		WebElementFacade element = element(By.linkText(description));
+		element.click();
+		element.waitUntilNotVisible(); 
+	}
+
 }

@@ -1,6 +1,7 @@
 package me.sh4rewith.persistence;
 
 import me.sh4rewith.domain.StorageCoordinates.StorageType;
+import me.sh4rewith.persistence.elasticsearch.ElasticSearchStorageRepository;
 import me.sh4rewith.persistence.filesystem.FileSystemStorageRepository;
 import me.sh4rewith.persistence.mongo.MongoStorageRepository;
 
@@ -19,6 +20,8 @@ public class Repositories {
 	private MongoStorageRepository mongoStorageRepository;
 	@Autowired
 	private FileSystemStorageRepository fileSystemStorageRepository;
+	@Autowired
+	private ElasticSearchStorageRepository elasticSearchStorageRepository;
 
 	public UsersRepository usersRepository() {
 		return usersRepository;
@@ -36,6 +39,8 @@ public class Repositories {
 			break;
 		case MONGO:
 			storageRepository = mongoStorageRepository;
+		case ELASTICSEARCH:
+			storageRepository = elasticSearchStorageRepository;
 		default:
 			break;
 		}
