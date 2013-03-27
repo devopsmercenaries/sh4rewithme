@@ -184,7 +184,7 @@ public class ElasticSearchSharedFileRepository implements SharedFilesRepository 
 			result = getSharedFileFromFootprint(footprint);
 		} catch (Throwable e) {
 			throw new ElasticSearchException(
-					"A problem occured while storing User information", e);
+					"A problem occured while getting SharedFile by Footprint Id", e);
 		}
 		return result;
 	}

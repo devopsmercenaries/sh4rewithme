@@ -1,5 +1,6 @@
 package me.sh4rewith.webtests.steps;
 
+import me.sh4rewith.webtests.pages.ErrorPage;
 import me.sh4rewith.webtests.pages.LoginPage;
 import me.sh4rewith.webtests.pages.RegistrationPage;
 import me.sh4rewith.webtests.pages.RegistrationSuccessPage;
@@ -105,9 +106,22 @@ public class EndUserSteps extends ScenarioSteps {
 
 	@Step
 	public void has_file_in_his_private_stream(String description) {
-		SharedFilesPage sharedFilesPage=getPages().currentPageAt(SharedFilesPage.class);
+		SharedFilesPage sharedFilesPage = getPages().currentPageAt(SharedFilesPage.class);
 		sharedFilesPage.open();
 		sharedFilesPage.has_file_in_private_stream(description);
+	}
+
+	@Step
+	public void downloads_file_from_his_private_stream(String description) {
+		SharedFilesPage sharedFilesPage = getPages().currentPageAt(SharedFilesPage.class);
+		sharedFilesPage.open();
+		sharedFilesPage.downloads_file_from_private_stream(description);
+		should_not_land_on_error_page(description);
+	}
+
+	@Step
+	private void should_not_land_on_error_page(String description) {
+		getPages().isCurrentPageAt(ErrorPage.class);
 	}
 
 }

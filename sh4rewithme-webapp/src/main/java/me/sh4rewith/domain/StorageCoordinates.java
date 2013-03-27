@@ -4,7 +4,7 @@ public interface StorageCoordinates {
 
 	public static enum StorageType {
 		FILESYSTEM,
-		MONGO
+		MONGO, ELASTICSEARCH
 	}
 
 	StorageType storageType();
