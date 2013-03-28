@@ -1,8 +1,10 @@
 package me.sh4rewith.persistence.elasticsearch;
 
+import static me.sh4rewith.persistence.keys.FileStorageInfoKeys.FILE_STORAGE_STORENAME;
+import me.sh4rewith.config.persistence.ElasticSearchEmbeddedConfig;
+import me.sh4rewith.config.persistence.ElasticSearchEmbeddedConfig.ElasticSearchIndexConfig;
 import me.sh4rewith.domain.StorageCoordinates;
 import me.sh4rewith.persistence.StorageRepository;
-import me.sh4rewith.utils.persistence.ElasticSearchUtils;
 
 import org.elasticsearch.ElasticSearchException;
 import org.elasticsearch.action.get.GetResponse;
@@ -18,6 +20,8 @@ import org.springframework.stereotype.Service;
 public class ElasticSearchStorageRepository implements StorageRepository {
 	@Autowired
 	private Client esClient;
+	@Autowired
+	private ElasticSearchIndexConfig indexConfig;
 
 	@Override
 	public StorageCoordinates store(byte[] bytes) {
@@ -26,14 +30,14 @@ public class ElasticSearchStorageRepository implements StorageRepository {
 			XContentBuilder source = XContentFactory
 					.jsonBuilder()
 					.startObject()
-					.field("bytes", Base64.encodeBytes(bytes))
+					.field(FILE_STORAGE_STORENAME.keyName(), Base64.encodeBytes(bytes))
 					.endObject();
-			IndexResponse indexResponse = esClient.prepareIndex(ElasticSearchUtils.GLOBAL_INDEX,
-					"file_storage").setSource(source).execute().actionGet();
+			IndexResponse indexResponse = esClient.prepareIndex(ElasticSearchEmbeddedConfig.GLOBAL_INDEX,
+					indexConfig.indexNameFor(FILE_STORAGE_STORENAME)).setSource(source).execute().actionGet();
 			result = indexResponse.id();
 		} catch (Throwable e) {
 			throw new ElasticSearchException(
-					"A problem occured while storing Shared File footprint", e);
+					"A problem occured while storing File", e);
 		}
 		return new ElasticSearchStorageCoordinates.Builder(result).build();
 	}
@@ -43,16 +47,16 @@ public class ElasticSearchStorageRepository implements StorageRepository {
 		byte[] file = null;
 		try {
 			GetResponse response = esClient
-					.prepareGet(ElasticSearchUtils.GLOBAL_INDEX,
-							"file_storage",
+					.prepareGet(ElasticSearchEmbeddedConfig.GLOBAL_INDEX,
+							FILE_STORAGE_STORENAME.keyName(),
 							coordinates.coordinates())
-					.setFields("bytes").execute()
+					.setFields(indexConfig.indexNameFor(FILE_STORAGE_STORENAME)).execute()
 					.actionGet();
-			Object value = response.field("bytes").value();
-			file = Base64.decode((String)value);
+			Object value = response.field(indexConfig.indexNameFor(FILE_STORAGE_STORENAME)).value();
+			file = Base64.decode((String) value);
 		} catch (Throwable e) {
 			throw new ElasticSearchException(
-					"A problem occured while getting Shared File Info by Id", e);
+					"A problem occured while getting File by coordinates:" + coordinates.coordinates(), e);
 		}
 		return file;
 	}

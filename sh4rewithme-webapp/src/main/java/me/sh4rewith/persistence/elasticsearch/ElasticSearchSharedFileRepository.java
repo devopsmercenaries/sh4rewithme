@@ -23,6 +23,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import me.sh4rewith.config.persistence.ElasticSearchEmbeddedConfig.ElasticSearchIndexConfig;
 import me.sh4rewith.domain.Privacy;
 import me.sh4rewith.domain.Privacy.Type;
 import me.sh4rewith.domain.RawFile;
@@ -37,7 +38,6 @@ import me.sh4rewith.persistence.keys.RawFileKeys;
 import me.sh4rewith.persistence.keys.SharedFileFootprintKeys;
 import me.sh4rewith.persistence.keys.SharedFileInfoKeys;
 import me.sh4rewith.utils.persistence.ElasticSearchResponseWrapper;
-import me.sh4rewith.utils.persistence.ElasticSearchUtils;
 import me.sh4rewith.utils.persistence.StorageUtils;
 
 import org.elasticsearch.ElasticSearchException;
@@ -64,6 +64,8 @@ public class ElasticSearchSharedFileRepository implements SharedFilesRepository 
 
 	@Autowired
 	private Client esClient;
+	@Autowired
+	private ElasticSearchIndexConfig indexConfig;
 
 	@Override
 	public void store(SharedFile sharedFile) {
@@ -84,7 +86,7 @@ public class ElasticSearchSharedFileRepository implements SharedFilesRepository 
 					.field(CREATION_DATE.keyName(), footprint.getCreationDate())
 					.field(EXPIRATION_DATE.keyName(),
 							footprint.getCreationDate()).endObject();
-			esClient.prepareIndex(ElasticSearchUtils.GLOBAL_INDEX,
+			esClient.prepareIndex(indexConfig.indexNameFor(SHARED_FILE_FOOTPRINT_STORENAME),
 					SHARED_FILE_FOOTPRINT_STORENAME.keyName(),
 					footprint.getId()).setSource(source).execute().actionGet();
 		} catch (Throwable e) {
@@ -107,7 +109,7 @@ public class ElasticSearchSharedFileRepository implements SharedFilesRepository 
 					.array(BUDDIES_LIST.keyName(),
 							info.getPrivacy().getBuddies().toArray())
 					.endObject();
-			esClient.prepareIndex(ElasticSearchUtils.GLOBAL_INDEX,
+			esClient.prepareIndex(indexConfig.indexNameFor(SHARED_FILE_INFO_STORENAME),
 					SHARED_FILE_INFO_STORENAME.keyName(), info.getId())
 					.setSource(source).execute().actionGet();
 		} catch (Throwable e) {
@@ -128,7 +130,7 @@ public class ElasticSearchSharedFileRepository implements SharedFilesRepository 
 							rawFileInfo.getOriginalFileName())
 					.field(RAW_FILE_ID.keyName(), rawFileInfo.getRawFileId())
 					.endObject();
-			esClient.prepareIndex(ElasticSearchUtils.GLOBAL_INDEX,
+			esClient.prepareIndex(indexConfig.indexNameFor(RAW_FILE_INFO_STORENAME),
 					RAW_FILE_INFO_STORENAME.keyName(), rawFileInfo.getId())
 					.setSource(source).execute().actionGet();
 		} catch (Throwable e) {
@@ -145,7 +147,7 @@ public class ElasticSearchSharedFileRepository implements SharedFilesRepository 
 					.field(STORAGE_COORDINATES.keyName(),
 							StorageUtils.serializeCoordinates(rawFile
 									.getStorageCoordinates())).endObject();
-			esClient.prepareIndex(ElasticSearchUtils.GLOBAL_INDEX,
+			esClient.prepareIndex(indexConfig.indexNameFor(RAW_FILE_STORENAME),
 					RAW_FILE_STORENAME.keyName(), rawFile.getId())
 					.setSource(source).execute().actionGet();
 		} catch (Throwable e) {
@@ -159,7 +161,7 @@ public class ElasticSearchSharedFileRepository implements SharedFilesRepository 
 		List<SharedFile> result = new ArrayList<SharedFile>();
 		try {
 			SearchResponse response = esClient
-					.prepareSearch(ElasticSearchUtils.GLOBAL_INDEX)
+					.prepareSearch(indexConfig.indexNameFor(SHARED_FILE_FOOTPRINT_STORENAME))
 					.setTypes(SHARED_FILE_FOOTPRINT_STORENAME.keyName())
 					.addFields(SharedFileFootprintKeys.keyNamesArray())
 					.execute().actionGet();
@@ -204,7 +206,7 @@ public class ElasticSearchSharedFileRepository implements SharedFilesRepository 
 		SharedFileInfo result = null;
 		try {
 			GetResponse response = esClient
-					.prepareGet(ElasticSearchUtils.GLOBAL_INDEX,
+					.prepareGet(indexConfig.indexNameFor(SHARED_FILE_INFO_STORENAME),
 							SHARED_FILE_INFO_STORENAME.keyName(),
 							sharedFileInfoId)
 					.setFields(SharedFileInfoKeys.keyNamesArray()).execute()
@@ -222,7 +224,7 @@ public class ElasticSearchSharedFileRepository implements SharedFilesRepository 
 		RawFileInfo result = null;
 		try {
 			SearchResponse response = esClient
-					.prepareSearch(ElasticSearchUtils.GLOBAL_INDEX)
+					.prepareSearch(indexConfig.indexNameFor(RAW_FILE_INFO_STORENAME))
 					.setTypes(RAW_FILE_INFO_STORENAME.keyName())
 					.addFields(RawFileInfoKeys.keyNamesArray())
 					.setQuery(
@@ -241,7 +243,7 @@ public class ElasticSearchSharedFileRepository implements SharedFilesRepository 
 		RawFile result = null;
 		try {
 			GetResponse response = esClient
-					.prepareGet(ElasticSearchUtils.GLOBAL_INDEX,
+					.prepareGet(indexConfig.indexNameFor(RAW_FILE_STORENAME),
 							RAW_FILE_STORENAME.keyName(), rawFileId)
 					.setFields(RawFileKeys.keyNamesArray()).execute()
 					.actionGet();
@@ -258,7 +260,7 @@ public class ElasticSearchSharedFileRepository implements SharedFilesRepository 
 		List<SharedFileDescriptor> result = new ArrayList<SharedFileDescriptor>();
 		try {
 			SearchResponse response = esClient
-					.prepareSearch(ElasticSearchUtils.GLOBAL_INDEX)
+					.prepareSearch(indexConfig.indexNameFor(SHARED_FILE_FOOTPRINT_STORENAME))
 					.setTypes(SHARED_FILE_FOOTPRINT_STORENAME.keyName())
 					.addFields(SharedFileFootprintKeys.keyNamesArray())
 					.execute().actionGet();
@@ -290,16 +292,20 @@ public class ElasticSearchSharedFileRepository implements SharedFilesRepository 
 	public void deleteByFootprintId(String footprintId) {
 		SharedFileFootprint footprint = getSharedFileFootprintById(footprintId);
 		try {
-			esClient.prepareDelete(ElasticSearchUtils.GLOBAL_INDEX,
+			esClient.prepareDelete(
+					indexConfig.indexNameFor(RAW_FILE_STORENAME),
 					RAW_FILE_STORENAME.keyName(), footprint.getRawFileId())
 					.execute().actionGet();
-			esClient.prepareDelete(ElasticSearchUtils.GLOBAL_INDEX,
+			esClient.prepareDelete(
+					indexConfig.indexNameFor(RAW_FILE_INFO_STORENAME),
 					RAW_FILE_INFO_STORENAME.keyName(),
 					footprint.getRawFileId() + "-info").execute().actionGet();
-			esClient.prepareDelete(ElasticSearchUtils.GLOBAL_INDEX,
+			esClient.prepareDelete(
+					indexConfig.indexNameFor(SHARED_FILE_INFO_STORENAME),
 					SHARED_FILE_INFO_STORENAME.keyName(),
 					footprint.getSharedFileInfoId()).execute().actionGet();
-			esClient.prepareDelete(ElasticSearchUtils.GLOBAL_INDEX,
+			esClient.prepareDelete(
+					indexConfig.indexNameFor(SHARED_FILE_FOOTPRINT_STORENAME),
 					SHARED_FILE_FOOTPRINT_STORENAME.keyName(), footprintId)
 					.execute().actionGet();
 		} catch (Throwable e) {
@@ -310,7 +316,7 @@ public class ElasticSearchSharedFileRepository implements SharedFilesRepository 
 
 	private SharedFileFootprint getSharedFileFootprintById(String footprintId) {
 		GetResponse response = esClient
-				.prepareGet(ElasticSearchUtils.GLOBAL_INDEX,
+				.prepareGet(indexConfig.indexNameFor(SHARED_FILE_FOOTPRINT_STORENAME),
 						SHARED_FILE_FOOTPRINT_STORENAME.keyName(), footprintId)
 				.setFields(SharedFileFootprintKeys.keyNamesArray()).execute()
 				.actionGet();
@@ -324,7 +330,7 @@ public class ElasticSearchSharedFileRepository implements SharedFilesRepository 
 		List<SharedFileDescriptor> result = new ArrayList<SharedFileDescriptor>();
 		try {
 			SearchResponse response = esClient
-					.prepareSearch(ElasticSearchUtils.GLOBAL_INDEX)
+					.prepareSearch(indexConfig.indexNameFor(SHARED_FILE_INFO_STORENAME))
 					.setTypes(SHARED_FILE_INFO_STORENAME.keyName())
 					.setQuery(
 							QueryBuilders.fieldQuery(PRIVACY_TYPE.keyName(),
@@ -358,7 +364,7 @@ public class ElasticSearchSharedFileRepository implements SharedFilesRepository 
 					notPublicQuery, filterOwnedOrBuddied);
 
 			SearchResponse response = esClient
-					.prepareSearch(ElasticSearchUtils.GLOBAL_INDEX)
+					.prepareSearch(indexConfig.indexNameFor(SHARED_FILE_INFO_STORENAME))
 					.setTypes(SHARED_FILE_INFO_STORENAME.keyName())
 					.setQuery(query).execute().actionGet();
 			SearchHit[] searchHits = response.getHits().getHits();
@@ -379,7 +385,7 @@ public class ElasticSearchSharedFileRepository implements SharedFilesRepository 
 		MatchQueryBuilder matchQuery = QueryBuilders.matchPhraseQuery(
 				SHARED_FILE_INFO_ID.keyName(), id);
 		SearchResponse response = esClient
-				.prepareSearch(ElasticSearchUtils.GLOBAL_INDEX)
+				.prepareSearch(indexConfig.indexNameFor(SHARED_FILE_FOOTPRINT_STORENAME))
 				.setTypes(SHARED_FILE_FOOTPRINT_STORENAME.keyName())
 				.setQuery(matchQuery)
 				.addFields(SharedFileFootprintKeys.keyNamesArray()).execute()
@@ -414,10 +420,10 @@ public class ElasticSearchSharedFileRepository implements SharedFilesRepository 
 
 	private void updatePrivacy(SharedFileInfo sharedFileInfo, Type privacyType) {
 		try {
-			esClient.prepareUpdate().setIndex(ElasticSearchUtils.GLOBAL_INDEX)
+			esClient.prepareUpdate().setIndex(indexConfig.indexNameFor(SHARED_FILE_INFO_STORENAME))
 					.setType(SHARED_FILE_INFO_STORENAME.keyName())
 					.setId(sharedFileInfo.getId())
-					.setScript("ctx._source."+PRIVACY_TYPE.keyName()+" = \""+privacyType.name()+"\"").execute()
+					.setScript("ctx._source." + PRIVACY_TYPE.keyName() + " = \"" + privacyType.name() + "\"").execute()
 					.actionGet();
 		} catch (Throwable e) {
 			throw new ElasticSearchException(
@@ -444,7 +450,7 @@ public class ElasticSearchSharedFileRepository implements SharedFilesRepository 
 	@Override
 	public Long countAll() {
 		CountResponse response = esClient
-				.prepareCount(ElasticSearchUtils.GLOBAL_INDEX)
+				.prepareCount(indexConfig.indexNameFor(SHARED_FILE_FOOTPRINT_STORENAME))
 				.setTypes(SHARED_FILE_FOOTPRINT_STORENAME.keyName()).execute()
 				.actionGet();
 		return response.count();
@@ -463,7 +469,7 @@ public class ElasticSearchSharedFileRepository implements SharedFilesRepository 
 			Date expirationDate) {
 		List<SharedFileFootprint> result = new ArrayList<SharedFileFootprint>();
 		SearchResponse response = esClient
-				.prepareSearch(ElasticSearchUtils.GLOBAL_INDEX)
+				.prepareSearch(indexConfig.indexNameFor(SHARED_FILE_FOOTPRINT_STORENAME))
 				.setTypes(SHARED_FILE_FOOTPRINT_STORENAME.keyName())
 				.addFields(SharedFileFootprintKeys.keyNamesArray())
 				.setQuery(
@@ -490,7 +496,7 @@ public class ElasticSearchSharedFileRepository implements SharedFilesRepository 
 					.startObject()
 					.array(BUDDIES_LIST.keyName(), newBuddies.toArray())
 					.endObject();
-			esClient.prepareUpdate().setIndex(ElasticSearchUtils.GLOBAL_INDEX)
+			esClient.prepareUpdate().setIndex(indexConfig.indexNameFor(SHARED_FILE_INFO_STORENAME))
 					.setType(SHARED_FILE_INFO_STORENAME.keyName())
 					.setId(sharedFileInfo.getId()).setUpsert(source).execute()
 					.actionGet();
