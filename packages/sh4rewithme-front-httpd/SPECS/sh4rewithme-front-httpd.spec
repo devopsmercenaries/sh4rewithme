@@ -8,8 +8,8 @@
 %define domain sh4rewith.me
 
 Name: %{projectname}-front-httpd
-Version: 1.0.0
-Release: 2
+Version: 1.1.0
+Release: 1
 Summary: Apache2 Front configuration for %{projectname}
 Group: %{projectname}/tools
 URL: http://www.sh4rewith.me/
@@ -83,6 +83,11 @@ fi
 %config(noreplace) %{_sysconfdir}/apache2/ssl.key/
 
 %changelog
+* Wed Mar 29 2013 henri.gomez@gmail.com 1.1.0-1
+- Remove SSL support (and secrets cert/keys)
+- VHost is now named default
+- Use load-balancing with 2 workers in active/active mode
+
 * Sun Apr 16 2012 pierre.antoine.gregoire@gmail.com 1.0.0-2
 - Add SSL support
 
