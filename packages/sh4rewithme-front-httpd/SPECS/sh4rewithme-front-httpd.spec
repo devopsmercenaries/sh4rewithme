@@ -25,10 +25,6 @@ Requires: apache2-mod_jk
 Source0: workers.properties
 Source1: jk.conf
 Source2: %{projectname}.conf
-Source3: %{projectname}-ssl.conf
-Source4: %{projectname}.crt
-Source5: %{projectname}.key
-Source6: GandiStandardSSLCA.pem
 
 %description
 Apache2 Front configuration for %{projectname}
@@ -48,11 +44,6 @@ mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/apache2/ssl.key
 cp %{SOURCE0} $RPM_BUILD_ROOT%{_sysconfdir}/apache2/conf.d
 cp %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/apache2/conf.d
 cp %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/apache2/vhosts.d
-cp %{SOURCE3} $RPM_BUILD_ROOT%{_sysconfdir}/apache2/vhosts.d
-
-cp %{SOURCE4} $RPM_BUILD_ROOT%{_sysconfdir}/apache2/ssl.crt
-cp %{SOURCE5} $RPM_BUILD_ROOT%{_sysconfdir}/apache2/ssl.key
-cp %{SOURCE6} $RPM_BUILD_ROOT%{_sysconfdir}/apache2/ssl.crt
 
 %{__portsed} 's|@@PROJECTNAME@@|%{projectname}|g' $RPM_BUILD_ROOT%{_sysconfdir}/apache2/conf.d/workers.properties
 %{__portsed} 's|@@PROJECTNAME@@|%{projectname}|g' $RPM_BUILD_ROOT%{_sysconfdir}/apache2/conf.d/jk.conf
