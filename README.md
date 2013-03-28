@@ -30,7 +30,7 @@ First start the webapp in a given console.
 
 Then run integration tests:
 ######
-    mvn integration-test thucydides:aggregate -f sh4rewithme-webtests/pom.xml
+    mvn verify -test thucydides:aggregate -Dskip.webtests=false -f sh4rewithme-webtests/pom.xml
 
 Tests results report will be available in:
 ######
@@ -43,9 +43,8 @@ First start the webapp in a given console.
 ######
     mvn install tomcat7:run -pl sh4rewithme-webapp
 
-Then configure a graphite instance somewhere to monitor the test.
 Then run performance tests:
 ######
-    mvn install -P qual -f sh4rewithme-perf/pom.xml
+    mvn verify -P perftests -f sh4rewithme-perf/pom.xml
 
 Tests results report will be available in target/gatling/results/
