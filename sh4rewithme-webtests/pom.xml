@@ -9,11 +9,12 @@
 	</parent>
 	<artifactId>sh4rewithme-webtests</artifactId>
 	<packaging>jar</packaging>
-	<name>Sample Thucydides project</name>
+	<name>Sh4reWith.me Webtests</name>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<thucydides.version>0.9.98</thucydides.version>
 		<webdriver.driver>firefox</webdriver.driver>
+		<skip.webtests>true</skip.webtests>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -68,6 +69,7 @@
 				<artifactId>maven-failsafe-plugin</artifactId>
 				<version>2.12</version>
 				<configuration>
+					<skipTests>${skip.webtests}</skipTests>
 					<includes>
 						<include>**/*Test.java</include>
 						<include>**/Test*.java</include>
