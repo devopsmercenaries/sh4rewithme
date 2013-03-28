@@ -20,6 +20,7 @@ BuildArch:  noarch
 
 BuildRoot: %{_tmppath}/build-%{name}-%{version}-%{release}
 
+Requires: apache2-worker
 Requires: apache2-mod_jk
 
 Source0: workers.properties
@@ -65,7 +66,6 @@ if [ "$1" == "1" ]; then
   # Enable Apache module (silently avoid duplicates)
   a2enmod deflate >>/dev/null
   a2enmod jk >>/dev/null
-  a2enmod ssl >>/dev/null
   service apache2 restart
 
 fi
@@ -79,14 +79,13 @@ fi
 %defattr(-,root,root)
 %config(noreplace) %{_sysconfdir}/apache2/vhosts.d/
 %config(noreplace) %{_sysconfdir}/apache2/conf.d/
-%config(noreplace) %{_sysconfdir}/apache2/ssl.crt/
-%config(noreplace) %{_sysconfdir}/apache2/ssl.key/
 
 %changelog
 * Wed Mar 29 2013 henri.gomez@gmail.com 1.1.0-1
 - Remove SSL support (and secrets cert/keys)
 - VHost is now named default
 - Use load-balancing with 2 workers in active/active mode
+- Requires apache2-worker (threaded mode) for better performance and lowest memory footprint
 
 * Sun Apr 16 2012 pierre.antoine.gregoire@gmail.com 1.0.0-2
 - Add SSL support
