@@ -47,10 +47,10 @@
 			<id>sonatype-oss-releases</id>
 			<url>https://oss.sonatype.org/content/repositories/releases</url>
 		</repository>
-		<repository>
-			<id>sonatype-oss-snapshots</id>
-			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
-		</repository>
+        <repository>
+            <id>devopsmercenaries-oss</id>
+            <url>http://dl.bintray.com/content/dbaeli/devopsmercenaries</url> 
+        </repository>
 
 	</repositories>
 
@@ -76,10 +76,9 @@
 			<url>https://oss.sonatype.org/content/repositories/releases</url>
 		</pluginRepository>
 		<pluginRepository>
-			<id>sonatype-oss-snapshots</id>
-			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+                    <id>devopsmercenaries-oss</id>
+                    <url>http://dl.bintray.com/content/dbaeli/devopsmercenaries</url>
 		</pluginRepository>
-
 	</pluginRepositories>
 
 	<dependencyManagement>
@@ -214,7 +213,7 @@
 			<dependency>
 				<groupId>fr.pilato.spring</groupId>
 				<artifactId>spring-elasticsearch</artifactId>
-				<version>0.0.3-SNAPSHOT</version>
+				<version>0.0.3_LM</version>
 			</dependency>
 			<dependency>
 				<groupId>org.elasticsearch</groupId>
