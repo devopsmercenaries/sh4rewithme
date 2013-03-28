@@ -54,6 +54,17 @@
 
 	</repositories>
 
+	 <distributionManagement>
+            <repository>
+              <id>bintray-dbaeli-devopsmercenaries</id>
+              <url>https://api.bintray.com/maven/dbaeli/devopsmercenaries/sh4rewithme</url>
+            </repository>
+            <snapshotRepository>
+              <id>bintray-dbaeli-devopsmercenaries</id>
+              <url>https://api.bintray.com/maven/dbaeli/devopsmercenaries/sh4rewithme</url>
+            </snapshotRepository>
+        </distributionManagement>
+
 	<pluginRepositories>
 		<pluginRepository>
 			<id>apache.snapshots</id>
@@ -255,6 +266,11 @@
 		</plugins>
 		<pluginManagement>
 			<plugins>
+                                <plugin>
+                                  <groupId>org.apache.maven.plugins</groupId>
+                                  <artifactId>maven-release-plugin</artifactId>
+                                  <version>2.4</version>
+                                </plugin>
 				<plugin>
 					<groupId>org.apache.tomcat.maven</groupId>
 					<artifactId>tomcat7-maven-plugin</artifactId>
