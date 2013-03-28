@@ -1,7 +1,12 @@
 #!/bin/sh
 
-APP_VERSION=1.0.0-SNAPSHOT
-TOMCAT_VERSION=7.0.27
+if [ -z "$APP_VERSION" ]; then
+  APP_VERSION=1.0.0
+fi
+
+if [ -z "$TOMCAT_VERSION" ]; then
+  TOMCAT_VERSION=7.0.35
+fi
 
 if [ $# -gt 1 ]; then
   APP_VERSION=$1
@@ -18,8 +23,8 @@ ARTIFACT_ID=sh4rewithme-assembly
 ARTIFACT_VERSION=$APP_VERSION
 ARTIFACT_TYPE=tar.gz
 ARTIFACT_CLASSIFIER=-bin
-ARTIFACT_RELEASE_REPOSITORY=http://repository.sh4rewith.me/content/repositories/releases
-ARTIFACT_SNAPSHOT_REPOSITORY=http://repository.sh4rewith.me/content/repositories/snapshots
+ARTIFACT_RELEASE_REPOSITORY=http://dl.bintray.com/content/dbaeli/devopsmercenaries
+ARTIFACT_SNAPSHOT_REPOSITORY=http://dl.bintray.com/content/dbaeli/devopsmercenaries
 
 fetch_maven() {
 
