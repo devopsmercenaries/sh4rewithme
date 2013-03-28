@@ -2,8 +2,8 @@ package me.sh4rewith.config.persistence.bootstrap;
 
 import java.util.concurrent.ExecutionException;
 
+import me.sh4rewith.config.persistence.ElasticSearchEmbeddedConfig.ElasticSearchIndexConfig;
 import me.sh4rewith.persistence.UsersRepository;
-import me.sh4rewith.persistence.keys.UserInfoKeys;
 import me.sh4rewith.persistence.mongo.mappers.RawFileInfoMapper;
 import me.sh4rewith.persistence.mongo.mappers.RawFileMapper;
 import me.sh4rewith.persistence.mongo.mappers.SharedFileFootprintMapper;
@@ -33,12 +33,15 @@ public class ElasticSearchInitBootstrap extends AbstractInitBootstrap {
 	@Autowired
 	private AdminClient esAdminClient;
 
+	@Autowired
+	private ElasticSearchIndexConfig indexConfig;
+	
 	@Bean
 	public ElasticSearchInitBootstrap bootstrap() throws InterruptedException,
 			ExecutionException {
 		IndicesExistsResponse userInfoIndexExistsResponse = esAdminClient
 				.indices()
-				.prepareExists(UserInfoKeys.USER_INFO_STORENAME.keyName())
+				.prepareExists(indexConfig.allIndexes())
 				.execute().get();
 		IndicesExistsResponse sharedFileFootprintIndexExistsResponse = esAdminClient
 				.indices()

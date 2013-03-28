@@ -10,7 +10,8 @@
 	<modules>
 		<module>../sh4rewithme-webapp</module>
 		<module>../sh4rewithme-assembly</module>
-		<!-- <module>../sh4rewithme-webtests</module> <module>../sh4rewithme-perf</module> -->
+		<module>../sh4rewithme-webtests</module>
+		<module>../sh4rewithme-perf</module>
 	</modules>
 
 	<properties>
@@ -47,10 +48,10 @@
 			<id>sonatype-oss-releases</id>
 			<url>https://oss.sonatype.org/content/repositories/releases</url>
 		</repository>
-        <repository>
-            <id>devopsmercenaries-oss</id>
-            <url>http://dl.bintray.com/content/dbaeli/devopsmercenaries</url> 
-        </repository>
+		<repository>
+			<id>devopsmercenaries-oss</id>
+			<url>http://dl.bintray.com/content/dbaeli/devopsmercenaries</url>
+		</repository>
 
 	</repositories>
 
@@ -76,8 +77,8 @@
 			<url>https://oss.sonatype.org/content/repositories/releases</url>
 		</pluginRepository>
 		<pluginRepository>
-                    <id>devopsmercenaries-oss</id>
-                    <url>http://dl.bintray.com/content/dbaeli/devopsmercenaries</url>
+			<id>devopsmercenaries-oss</id>
+			<url>http://dl.bintray.com/content/dbaeli/devopsmercenaries</url>
 		</pluginRepository>
 	</pluginRepositories>
 
