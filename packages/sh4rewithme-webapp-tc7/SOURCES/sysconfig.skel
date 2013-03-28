@@ -58,10 +58,20 @@ SHUTDOWN_WAIT=10
 #
 APP_JAVA_HOME=
 APP_JAVA_OPTS="-Xms128m -Xmx512m -XX:MaxPermSize=128m -Xss512k"
+APP_JAVA_OPTS="$APP_JAVA_OPTS -Djava.security.egd=file:/dev/./urandom"
+APP_JAVA_OPTS="$APP_JAVA_OPTS -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=@@APP_LOGDIR@@"
+
 # Spring profiles among:
 # prod-mongo (on server), local-mongo (on development desktop), remote-mongo (on mongohq)
 # prod-mail (jndi mail session), local-mail (local smtp), trap-mail (on mailtrap.io)
 # registration-security (only available now, as openid-security is buggy)
-APP_JAVA_OPTS="$APP_JAVA_OPTS -Dspring.profiles.active=prod-mongo,registration-security,prod-mail,init-mongo"
-APP_JAVA_OPTS="$APP_JAVA_OPTS -Djava.security.egd=file:/dev/./urandom"
-APP_JAVA_OPTS="$APP_JAVA_OPTS -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=@@APP_LOGDIR@@"
+#
+# 2012 - Mongo DB by default
+#
+#APP_JAVA_OPTS="$APP_JAVA_OPTS -Dspring.profiles.active=prod-mongo,registration-security,prod-mail,init-mongo"
+
+#
+# 2013 - Elasticsearch Embbeded by default
+#
+APP_JAVA_OPTS="$APP_JAVA_OPTS -Dspring.profiles.active=embedded-elasticsearch,registration-security,init-elasticsearch"
+
