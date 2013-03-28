@@ -10,8 +10,6 @@ import org.elasticsearch.common.joda.time.format.ISODateTimeFormat;
 import org.elasticsearch.search.SearchHit;
 
 public final class ElasticSearchUtils {
-	public static final String GLOBAL_INDEX = "sh4rewithme";
-
 	private ElasticSearchUtils() {
 	}
 
