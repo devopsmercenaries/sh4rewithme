@@ -21,7 +21,7 @@ import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.servlet.DispatcherServlet;
 
 public class Sh4reWithMeWebApplicationInitializer implements WebApplicationInitializer {
-	final String[] DEFAULT_ACTIVE_PROFILES = new String[] { "embedded-elasticsearch", "registration-security", "init-elasticsearch" };
+	final String[] DEFAULT_ACTIVE_PROFILES = new String[] { "demo", "registration-security" };
 
 	@Override
 	public void onStartup(ServletContext container) {

@@ -23,7 +23,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import me.sh4rewith.config.persistence.ElasticSearchEmbeddedConfig.ElasticSearchIndexConfig;
+import me.sh4rewith.config.persistence.ElasticSearchConfigBase.ElasticSearchIndexConfig;
 import me.sh4rewith.domain.Privacy;
 import me.sh4rewith.domain.Privacy.Type;
 import me.sh4rewith.domain.RawFile;
