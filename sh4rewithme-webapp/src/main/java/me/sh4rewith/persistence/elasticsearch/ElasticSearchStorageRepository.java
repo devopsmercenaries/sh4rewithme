@@ -1,8 +1,8 @@
 package me.sh4rewith.persistence.elasticsearch;
 
 import static me.sh4rewith.persistence.keys.FileStorageInfoKeys.FILE_STORAGE_STORENAME;
-import me.sh4rewith.config.persistence.ElasticSearchEmbeddedConfig;
-import me.sh4rewith.config.persistence.ElasticSearchEmbeddedConfig.ElasticSearchIndexConfig;
+import me.sh4rewith.config.persistence.ElasticSearchConfigBase;
+import me.sh4rewith.config.persistence.ElasticSearchConfigBase.ElasticSearchIndexConfig;
 import me.sh4rewith.domain.StorageCoordinates;
 import me.sh4rewith.persistence.StorageRepository;
 
@@ -32,7 +32,7 @@ public class ElasticSearchStorageRepository implements StorageRepository {
 					.startObject()
 					.field(FILE_STORAGE_STORENAME.keyName(), Base64.encodeBytes(bytes))
 					.endObject();
-			IndexResponse indexResponse = esClient.prepareIndex(ElasticSearchEmbeddedConfig.GLOBAL_INDEX,
+			IndexResponse indexResponse = esClient.prepareIndex(ElasticSearchConfigBase.GLOBAL_INDEX,
 					indexConfig.indexNameFor(FILE_STORAGE_STORENAME)).setSource(source).execute().actionGet();
 			result = indexResponse.id();
 		} catch (Throwable e) {
@@ -47,7 +47,7 @@ public class ElasticSearchStorageRepository implements StorageRepository {
 		byte[] file = null;
 		try {
 			GetResponse response = esClient
-					.prepareGet(ElasticSearchEmbeddedConfig.GLOBAL_INDEX,
+					.prepareGet(ElasticSearchConfigBase.GLOBAL_INDEX,
 							FILE_STORAGE_STORENAME.keyName(),
 							coordinates.coordinates())
 					.setFields(indexConfig.indexNameFor(FILE_STORAGE_STORENAME)).execute()

@@ -20,18 +20,13 @@ import org.elasticsearch.node.Node;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 
 import fr.pilato.spring.elasticsearch.ElasticsearchClientFactoryBean;
 import fr.pilato.spring.elasticsearch.ElasticsearchNodeFactoryBean;
 
 @Configuration
-@Profile("embedded-elasticsearch")
-@PropertySource("classpath:elasticsearch-embedded.properties")
-public class ElasticSearchEmbeddedConfig {
-	public static final String GLOBAL_INDEX = "sh4rewithme";
+public abstract class ElasticSearchConfigBase {
 
 	public static class ElasticSearchIndexConfig {
 		final private Map<Key, String> indexMap;
@@ -76,17 +71,20 @@ public class ElasticSearchEmbeddedConfig {
 
 	}
 
+	public static final String GLOBAL_INDEX = "sh4rewithme";
 	@Autowired
-	private Environment environment;
+	protected Environment environment;
 
 	@Bean
 	public Node elasticSearchNode() throws Exception {
 		ElasticsearchNodeFactoryBean factoryBean = new ElasticsearchNodeFactoryBean();
-		factoryBean.setSettingsFile("elasticsearch-demo.yml");
+		factoryBean.setSettingsFile(getElasticSearchConfigFile());
 		factoryBean.afterPropertiesSet();
 		Node node = factoryBean.getObject();
 		return node;
 	}
+
+	public abstract String getElasticSearchConfigFile();
 
 	@Bean
 	public Client elasticSearchClient() throws Exception {

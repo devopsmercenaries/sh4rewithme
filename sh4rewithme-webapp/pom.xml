@@ -152,7 +152,7 @@
 						<artifactId>tomcat7-maven-plugin</artifactId>
 						<configuration>
 							<systemProperties>
-								<spring.profiles.active>embedded-elasticsearch,registration-security,init-elasticsearch</spring.profiles.active>
+								<spring.profiles.active>demo,registration-security</spring.profiles.active>
 							</systemProperties>
 						</configuration>
 					</plugin>
