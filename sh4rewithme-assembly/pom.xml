@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>me.sh4rewith</groupId>
 		<artifactId>sh4rewithme-parent</artifactId>
-		<version>1.0.0</version>
+		<version>1.0.1-SNAPSHOT</version>
 		<relativePath>../sh4rewithme-parent</relativePath>
 	</parent>
 	<artifactId>sh4rewithme-assembly</artifactId>

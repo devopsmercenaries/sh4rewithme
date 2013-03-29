@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>me.sh4rewith</groupId>
 	<artifactId>sh4rewithme-parent</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Sh4reWith.me Parent POM</name>
 	<modules>
