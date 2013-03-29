@@ -25,7 +25,7 @@ Requires: apache2-mod_jk
 
 Source0: workers.properties
 Source1: jk.conf
-Source2: %{projectname}.conf
+Source2: default.conf
 
 %description
 Apache2 Front configuration for %{projectname}
