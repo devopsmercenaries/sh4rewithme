@@ -5,7 +5,7 @@
 	<parent>
 		<artifactId>sh4rewithme</artifactId>
 		<groupId>me.sh4rewith</groupId>
-		<version>1.0.0-SNAPSHOT</version>
+		<version>1.0.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>sh4rewithme-webtests</artifactId>
 	<packaging>jar</packaging>
