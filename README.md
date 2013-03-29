@@ -1,4 +1,4 @@
-[![Build Status](https://buildhive.cloudbees.com/job/devopsmercenaries/job/sh4rewithme/badge/icon)](https://buildhive.cloudbees.com/job/devopsmercenaries/job/sh4rewithme/)
+[![Build Status](https://devopsmercenaries.ci.cloudbees.com/job/sh4rewithme/badge/icon)](https://devopsmercenaries.ci.cloudbees.com/job/sh4rewithme/)
 
 How to try it out quickly
 ========================================
