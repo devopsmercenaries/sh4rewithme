@@ -38,22 +38,18 @@ Apache2 Front configuration for %{projectname}
 rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/apache2/conf.d
 mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/apache2/vhosts.d
-mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/apache2/ssl.crt
-mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/apache2/ssl.key
 
 # install vhost and jk settings
 cp %{SOURCE0} $RPM_BUILD_ROOT%{_sysconfdir}/apache2/conf.d
 cp %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/apache2/conf.d
-cp %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/apache2/vhosts.d
+cp %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/apache2/vhosts.d/%{projectname}.conf
 
 %{__portsed} 's|@@PROJECTNAME@@|%{projectname}|g' $RPM_BUILD_ROOT%{_sysconfdir}/apache2/conf.d/workers.properties
 %{__portsed} 's|@@PROJECTNAME@@|%{projectname}|g' $RPM_BUILD_ROOT%{_sysconfdir}/apache2/conf.d/jk.conf
 %{__portsed} 's|@@PROJECTNAME@@|%{projectname}|g' $RPM_BUILD_ROOT%{_sysconfdir}/apache2/vhosts.d/%{projectname}.conf
-%{__portsed} 's|@@PROJECTNAME@@|%{projectname}|g' $RPM_BUILD_ROOT%{_sysconfdir}/apache2/vhosts.d/%{projectname}-ssl.conf
 %{__portsed} 's|@@DOMAIN@@|%{domain}|g' $RPM_BUILD_ROOT%{_sysconfdir}/apache2/conf.d/workers.properties
 %{__portsed} 's|@@DOMAIN@@|%{domain}|g' $RPM_BUILD_ROOT%{_sysconfdir}/apache2/conf.d/jk.conf
 %{__portsed} 's|@@DOMAIN@@|%{domain}|g' $RPM_BUILD_ROOT%{_sysconfdir}/apache2/vhosts.d/%{projectname}.conf
-%{__portsed} 's|@@DOMAIN@@|%{domain}|g' $RPM_BUILD_ROOT%{_sysconfdir}/apache2/vhosts.d/%{projectname}-ssl.conf
 
 %clean
 rm -rf $RPM_BUILD_ROOT
