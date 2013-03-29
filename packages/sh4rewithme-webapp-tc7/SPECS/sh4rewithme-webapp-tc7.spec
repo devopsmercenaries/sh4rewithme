@@ -19,7 +19,7 @@
 %if %{?APP_REL:1}
 %define app_rel    %{APP_REL}
 %else
-%define app_rel    1
+%define app_rel    2
 %endif
 
 %define projectname           sh4rewithme
@@ -70,7 +70,20 @@ BuildRequires: systemd
 %define systemd_requires %{nil}
 %endif
 
-Requires:           java = 1:1.6.0
+#
+# Suse/openSUSE Java is not with epoch
+#
+%if 0%{suse_version}
+Requires:           java >= 1.6.0
+%endif
+
+#
+# Redhat/CentOS/Fedora is with epoch ... thanks JPackage ;)
+#
+%if 0%{?fedora} || 0%{?rhel} || 0%{?centos}
+Requires:           java >= 1:1.6.0
+%endif
+
 
 Requires(pre):      %{_sbindir}/groupadd
 Requires(pre):      %{_sbindir}/useradd
