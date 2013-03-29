@@ -167,7 +167,7 @@
 						<artifactId>tomcat7-maven-plugin</artifactId>
 						<configuration>
 							<systemProperties>
-								<spring.profiles.active>embedded-elasticsearch,registration-security,init-elasticsearch,jmxtrans</spring.profiles.active>
+								<spring.profiles.active>demo,registration-security,jmxtrans</spring.profiles.active>
 							</systemProperties>
 						</configuration>
 					</plugin>
@@ -175,4 +175,4 @@
 			</build>
 		</profile>
 	</profiles>
-</project>
+<o/project>
