@@ -33,8 +33,7 @@ class Sh4rePerfSimulation extends Simulation {
 		.acceptLanguageHeader("fr,fr-fr;q=0.8,en-us;q=0.5,en;q=0.3")
 		.disableFollowRedirect
 
-	val headers = Map(
-		"Keep-Alive" -> "115")
+	val headers = Map("Keep-Alive" -> "115")
 
 	val userFeeder = new Feeder[String] {
 	  // always return true as this feeder can be polled infinitively
@@ -81,14 +80,16 @@ class Sh4rePerfSimulation extends Simulation {
 	val scnNewUser = scenario("NewUser")
 		.repeat(extLoop) {
 			exec(http("request_home")
-						.get(extWebapp)
-						.headers(headers)
+				.get(extWebapp)
+				.headers(headers)
 				)
-     	    .feed(userFeeder)
+     	                .pause(100 milliseconds)
+                        .feed(userFeeder)
 			.exec(http("request_reg")
 						.get(extWebapp+"/user-registration")
 						.headers(headers)
 				)
+     	                .pause(100 milliseconds)
 			.exec(http("request_new")
 						.post(extWebapp+"/user-registration")
 						.param("id", "${username}")
@@ -113,6 +114,6 @@ class Sh4rePerfSimulation extends Simulation {
 		
 
 	//setUp(scnHomePage.users(extUsers).protocolConfig(httpConf))
-	//setUp(scnNewUser.users(extUsers).protocolConfig(httpConf))
-	setUp(scnLoadFile.users(extUsers).protocolConfig(httpConf))
+	setUp(scnNewUser.users(extUsers).protocolConfig(httpConf))
+	//setUp(scnLoadFile.users(extUsers).protocolConfig(httpConf))
 }
