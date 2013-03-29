@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <Context docBase="${catalina.base}/apps-repo/sh4rewithme-webapp-${project.version}.war">
 	<Manager pathname="" />
-	<Resource
+	<!--Resource
 		name="mail/Session"
 		auth="Container"
 		type="javax.mail.Session"
@@ -19,5 +19,5 @@
 			  mail.smtp.socketFactory.port="@APP_SMTP_PORT@"
 			  mail.smtp.socketFactory.class="javax.net.ssl.SSLSocketFactory"
 			  mail.smtp.socketFactory.fallback="false"
-			  />
+			  /-->
 </Context>
