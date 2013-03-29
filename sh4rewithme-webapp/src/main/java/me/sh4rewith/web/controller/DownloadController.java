@@ -35,13 +35,10 @@ public class DownloadController {
 		SharedFile doc = service.getRawFileBytes(sharedFileFootprintId, userId);
 		response.setContentLength(doc.getRawFileInfo().getSize().intValue());
 		response.setContentType(doc.getRawFileInfo().getContentType());
-
-		String fileFromStorage = doc.getRawFile().getStorageCoordinates()
-		        .coordinates();
-		LOG.info("Preprared the files" );
+		LOG.info("Prepared the files");
 
 		response.getOutputStream().write(
-		        service.getFileFromStorage(doc.getRawFile()
-		                .getStorageCoordinates()));
+				service.getFileFromStorage(doc.getRawFile()
+						.getStorageCoordinates()));
 	}
 }
