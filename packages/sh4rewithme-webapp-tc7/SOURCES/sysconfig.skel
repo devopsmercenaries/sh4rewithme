@@ -40,6 +40,7 @@ APP_JMX_ADMIN_PASSWORD=@@APP_RW_PWD@@
 
 APP_MONGO_FULLURI=mongodb://devops:devops@localhost:27017/devops2devoxx
 
+
 APP_SMTP_PORT=465
 APP_SMTP_USERNAME=emailsender@sh4rewith.me
 APP_SMTP_PASSWORD=devops2devoxx
@@ -70,8 +71,10 @@ APP_JAVA_OPTS="$APP_JAVA_OPTS -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=@
 #
 #APP_JAVA_OPTS="$APP_JAVA_OPTS -Dspring.profiles.active=prod-mongo,registration-security,prod-mail,init-mongo"
 
+APP_ES_DATA_PATH=$CATALINA_HOME/data/elasticsearch/
+APP_ES_HTTP_PORT=9200
+APP_ES_TCP_PORT=9300
 #
 # 2013 - Elasticsearch Embbeded by default
 #
-APP_JAVA_OPTS="$APP_JAVA_OPTS -Dspring.profiles.active=embedded-elasticsearch,registration-security,init-elasticsearch"
-
+APP_JAVA_OPTS="$APP_JAVA_OPTS -Dspring.profiles.active=prod,registration-security -Des.path.data=$APP_ES_DATA_PATH -Des.http.port=$APP_ES_HTTP_PORT -Des.transport.tcp.port=$APP_ES_TCP_PORT"

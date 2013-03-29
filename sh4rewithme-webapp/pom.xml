@@ -167,7 +167,7 @@
 						<artifactId>tomcat7-maven-plugin</artifactId>
 						<configuration>
 							<systemProperties>
-								<spring.profiles.active>demo,registration-security,jmxtrans</spring.profiles.active>
+								<spring.profiles.active>qual,registration-security,jmxtrans</spring.profiles.active>
 							</systemProperties>
 						</configuration>
 					</plugin>
