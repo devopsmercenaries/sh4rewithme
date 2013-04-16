@@ -38,13 +38,12 @@ Tests results report will be available in:
 
 How to launch performance tests
 =====================================
-For the moment:
+
 First start the webapp in a given console.
 ######
-    mvn install tomcat7:run -pl sh4rewithme-webapp
+    mvn install tomcat7:run -pl sh4rewithme-webapp,sh4rewithme-perf -am -Pperftests -Dsimulation.loops=2
 
-Then run performance tests:
+To reduce the number of loops which is default to 100000 (ouch !!!)
 ######
-    mvn verify -P perftests -f sh4rewithme-perf/pom.xml
+    -Dsimulation.loops=2
 
-Tests results report will be available in target/gatling/results/
