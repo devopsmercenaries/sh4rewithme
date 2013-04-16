@@ -9,7 +9,7 @@
 		<relativePath>../sh4rewithme-parent</relativePath>
 	</parent>
 	<artifactId>sh4rewithme-perf</artifactId>
-	<packaging>war</packaging>
+	<packaging>pom</packaging>
 	<name>Sh4reWith.me Perf Tests</name>
 
 	<properties>
