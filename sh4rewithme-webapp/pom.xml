@@ -174,5 +174,21 @@
 				</plugins>
 			</build>
 		</profile>
+    <profile>
+      <id>perftests</id>
+      <build>
+        <pluginManagement>
+          <plugins>
+            <plugin>
+              <groupId>org.apache.tomcat.maven</groupId>
+              <artifactId>tomcat7-maven-plugin</artifactId>
+              <configuration>
+                <fork>true</fork>
+              </configuration>
+            </plugin>
+          </plugins>
+        </pluginManagement>
+      </build>
+    </profile>
 	</profiles>
 </project>
